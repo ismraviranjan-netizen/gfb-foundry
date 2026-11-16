@@ -1,0 +1,18 @@
+foundry_table,foundry_field,meaning,source_system,source_table_or_api,source_field,unit,refresh,notes
+demand,week,planning bucket,,,,ISO week,,
+demand,dc,distribution centre code,ERP,site master,,code,daily,
+demand,sku,product code,ERP,material master,,code,daily,
+demand,forecast,consensus forecast for the bucket,planning tool,forecast export,,cases,weekly,
+demand,actual,sell-out or shipments,ERP/POS,,,cases,daily,which one: sell-in or sell-out
+inventory,on_hand,physical stock at bucket end,WMS,stock snapshot,,cases,hourly,snapshot time matters
+inventory,open_receipt,cases in transit not yet received,TMS,shipments in transit,,cases,hourly,
+inventory,snapshot_age_h,hours since the stock number was refreshed,integration layer,,,hours,per run,the data-stale evidence reads this
+orders,requested,cases the customer ordered,ERP,sales orders,,cases,daily,
+orders,shipped,cases shipped against the order,ERP/WMS,deliveries,,cases,daily,
+orders,on_time,delivered on or before the promised date,TMS/ERP,proof of delivery,,bool,daily,define promised date
+orders,in_full,shipped >= requested,derived,,,bool,,
+shipments,late_days,actual minus planned arrival,TMS,carrier events,,days,hourly,
+shipments,carrier,carrier name,TMS,,,text,,
+dock,avg_dwell_h,average truck time on site,YMS/WMS,gate events,,hours,daily,
+receipts,planned,cases the plant planned to ship,ERP,stock transfer orders,,cases,daily,
+receipts,received,cases received at the DC,WMS,goods receipts,,cases,daily,
