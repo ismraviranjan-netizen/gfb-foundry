@@ -1,0 +1,16 @@
+# Remote state, for when the apply moves from your laptop to GitHub Actions (or a second laptop).
+# 1. Create the bucket once, by hand:
+#      aws s3api create-bucket --bucket gfb-foundry-tfstate-<your-initials> --region ap-south-1 \
+#        --create-bucket-configuration LocationConstraint=ap-south-1
+#      aws s3api put-bucket-versioning --bucket gfb-foundry-tfstate-<your-initials> --versioning-configuration Status=Enabled
+# 2. Copy this file to backend.tf, put the bucket name in, then: terraform init -migrate-state
+# use_lockfile needs Terraform 1.10 or later: the lock is a .tflock object next to the state, no DynamoDB table.
+terraform {
+  backend "s3" {
+    bucket       = "gfb-foundry-tfstate-CHANGE-ME"
+    key          = "gfb-foundry/terraform.tfstate"
+    region       = "ap-south-1"
+    encrypt      = true
+    use_lockfile = true
+  }
+}
