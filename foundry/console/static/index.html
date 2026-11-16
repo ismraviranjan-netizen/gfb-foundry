@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GFB Control Tower</title>
+<style>
+  :root {
+    --bg: #0e1319; --panel: #151c25; --panel2: #1b2430; --line: #26323f; --text: #dbe3ec; --dim: #8b9bb0;
+    --red: #e5484d; --amber: #f2a93b; --green: #34a86f; --grey: #6f7d90; --blue: #4c8df6; --violet: #9170f0; --teal: #2bb5a8;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 13px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  header { display: flex; align-items: center; gap: 14px; padding: 10px 16px; border-bottom: 1px solid var(--line); background: #10171f; position: sticky; top: 0; z-index: 5; flex-wrap: wrap; }
+  .brand { font-weight: 700; letter-spacing: .04em; font-size: 15px; }
+  .brand b { color: var(--teal); }
+  .clock { font-family: var(--mono); font-size: 15px; padding: 3px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--panel2); border: 1px solid var(--line); color: var(--dim); white-space: nowrap; }
+  .chip b { color: var(--text); font-family: var(--mono); }
+  .spacer { flex: 1; }
+  button, select, input { font: inherit; color: var(--text); background: var(--panel2); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; }
+  button { cursor: pointer; } button:hover { border-color: var(--blue); }
+  button.go { background: #1d3a66; border-color: #2f5ea8; } button.ok { background: #173d2c; border-color: #2a7a53; } button.no { background: #4a1d20; border-color: #8d3036; }
+  button:disabled { opacity: .45; cursor: default; }
+  .banner { margin: 10px 16px 0; padding: 8px 12px; border-left: 3px solid var(--violet); background: var(--panel); border-radius: 4px; display: none; }
+  .banner .lbl { font-weight: 600; } .banner .said { color: var(--dim); }
+  main { display: grid; grid-template-columns: minmax(330px, 1.05fr) minmax(380px, 1.35fr) minmax(330px, 1fr); gap: 12px; padding: 12px 16px 24px; }
+  section { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; min-width: 0; }
+  h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); margin: 2px 0 10px; display: flex; align-items: center; gap: 8px; }
+  h2 .right { margin-left: auto; text-transform: none; letter-spacing: 0; }
+  table.radar { width: 100%; border-collapse: separate; border-spacing: 4px; }
+  table.radar th { font-size: 11px; color: var(--dim); font-weight: 600; text-align: center; }
+  table.radar td { height: 50px; border-radius: 6px; text-align: center; cursor: pointer; font-family: var(--mono); font-size: 11px; border: 1px solid transparent; position: relative; }
+  td.RED { background: rgba(229,72,77,.22); border-color: rgba(229,72,77,.55); } td.AMBER { background: rgba(242,169,59,.18); border-color: rgba(242,169,59,.5); }
+  td.GREEN { background: rgba(52,168,111,.12); border-color: rgba(52,168,111,.3); } td.GREY { background: rgba(111,125,144,.22); border-color: rgba(111,125,144,.6); }
+  td.sel { outline: 2px solid var(--blue); } td .m { font-weight: 700; font-size: 12px; } td .d { color: var(--dim); font-size: 10px; }
+  td .long { position: absolute; top: 2px; right: 4px; font-size: 9px; color: var(--teal); }
+  .legend { display: flex; gap: 10px; font-size: 11px; color: var(--dim); margin: 4px 0 8px; flex-wrap: wrap; }
+  .sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+  .cell { border-top: 1px solid var(--line); margin-top: 8px; padding-top: 8px; }
+  .cell .title { font-weight: 600; } .cell .reason { color: var(--dim); margin: 2px 0 6px; }
+  .note { color: var(--dim); font-size: 11.5px; }
+  .card { border: 1px solid var(--line); border-left: 4px solid var(--grey); border-radius: 6px; padding: 9px 10px; margin-bottom: 9px; background: var(--panel2); }
+  .card.P1 { border-left-color: var(--red); } .card.P2 { border-left-color: var(--amber); } .card.P3 { border-left-color: var(--blue); }
+  .card.dead { opacity: .55; }
+  .card .top { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+  .card .what { font-weight: 650; } .card .meta { color: var(--dim); font-size: 11.5px; margin: 2px 0 4px; }
+  .pill { font-size: 10.5px; font-weight: 700; padding: 1px 7px; border-radius: 4px; background: #24303d; font-family: var(--mono); }
+  .pill.P1 { background: rgba(229,72,77,.25); color: #ff9da0; } .pill.P2 { background: rgba(242,169,59,.22); color: #ffd08a; } .pill.P3 { background: rgba(76,141,246,.2); color: #a9c8ff; }
+  .st { margin-left: auto; font-size: 10.5px; font-family: var(--mono); padding: 1px 7px; border-radius: 4px; border: 1px solid var(--line); }
+  .st.READY, .st.PARTIAL { color: #ffd08a; border-color: #6b5222; } .st.APPLIED { color: #8fe0b6; border-color: #2a7a53; } .st.SUPERSEDED, .st.REJECTED, .st.WATCH { color: var(--dim); }
+  .steps { margin: 6px 0; padding: 0; list-style: none; }
+  .steps li { display: grid; grid-template-columns: 18px 1fr auto; gap: 6px; padding: 4px 0; border-top: 1px dashed #2a3644; align-items: start; }
+  .steps li:first-child { border-top: none; }
+  .tick { font-family: var(--mono); } .tick.APPROVED { color: var(--green); } .tick.REJECTED { color: var(--red); } .tick.open { color: var(--amber); }
+  .who { color: var(--dim); font-size: 11.5px; } .acts button { padding: 1px 7px; font-size: 11.5px; margin-left: 3px; }
+  .wi { display: flex; align-items: center; gap: 8px; margin: 6px 0 2px; font-family: var(--mono); font-size: 11.5px; }
+  .bar { height: 8px; border-radius: 4px; background: var(--red); } .bar.after { background: var(--green); }
+  details { margin-top: 4px; } summary { cursor: pointer; color: var(--dim); font-size: 11.5px; }
+  details ul { margin: 4px 0 0 16px; padding: 0; color: var(--dim); font-size: 11.5px; }
+  .tabs { display: flex; gap: 4px; margin-bottom: 8px; } .tabs button.on { border-color: var(--teal); color: #9de7df; }
+  .msg { border: 1px solid var(--line); border-radius: 6px; padding: 7px 9px; margin-bottom: 7px; background: var(--panel2); }
+  .msg .h { display: flex; gap: 6px; align-items: baseline; flex-wrap: wrap; } .msg .subj { font-weight: 600; }
+  .msg pre { white-space: pre-wrap; font: 11.5px/1.45 var(--mono); color: #c5cfdb; margin: 6px 0 0; }
+  .kind { font-size: 10px; padding: 0 6px; border-radius: 3px; background: #24303d; color: var(--dim); font-family: var(--mono); }
+  .kind.escalation { background: rgba(229,72,77,.25); color: #ffb0b3; } .kind.approval_request { background: rgba(76,141,246,.2); color: #a9c8ff; } .kind.fyi { background: rgba(43,181,168,.2); color: #9de7df; }
+  .jr { font: 11.5px/1.45 var(--mono); padding: 4px 0; border-top: 1px solid #222d39; } .jr .t { color: var(--violet); } .jr .n { color: var(--dim); display: block; padding-left: 12px; }
+  .jr.dup .t { color: var(--grey); } .jr.new { background: rgba(145,112,240,.08); }
+  .ev { display: grid; gap: 6px; } .ev .row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+  .qa { border-top: 1px solid var(--line); padding: 7px 0; } .qa .q { font-weight: 600; } .qa .a { color: #c5cfdb; margin-top: 3px; } .qa .tools { color: var(--dim); font-size: 11px; font-family: var(--mono); }
+  svg text { fill: var(--dim); font: 10px var(--mono); }
+  @media (max-width: 1100px) { main { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><b id="brand">GFB</b> CONTROL TOWER</div>
+  <div class="clock" id="clock">-</div>
+  <div class="chips" id="chips"></div>
+  <div class="spacer"></div>
+  <div id="controls"></div>
+</header>
+<div class="banner" id="banner"></div>
+<main>
+  <section>
+    <h2>Risk radar · next <span id="radarh">14</span> days <span class="right note" id="radarweek"></span></h2>
+    <div class="legend"><span><i class="sw" style="background:var(--red)"></i>RED short</span><span><i class="sw" style="background:var(--amber)"></i>AMBER under safety stock</span><span><i class="sw" style="background:var(--green)"></i>GREEN</span><span><i class="sw" style="background:var(--grey)"></i>GREY stale data</span><span style="color:var(--teal)">LONG = above its long line: a sender</span></div>
+    <table class="radar" id="radar"></table>
+    <div class="cell" id="cell"><span class="note">Click a cell to see the day-by-day projection behind it.</span></div>
+  </section>
+  <section>
+    <h2>Plans <span class="right"><select id="planfilter"><option value="open">open and recent</option><option value="all">all versions</option></select></span></h2>
+    <div id="plans"></div>
+  </section>
+  <section>
+    <div class="tabs" id="tabs"></div>
+    <div id="pane"></div>
+  </section>
+</main>
+<!--DEMO-->
+<script>
+const DEMO = window.DEMO || null;
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const inr = (x) => { if (x == null) return "-"; const n = Math.round(+x), s = String(Math.abs(n)); let out = s;
+  if (s.length > 3) { let head = s.slice(0, -3); const tail = s.slice(-3), parts = []; while (head.length > 2) { parts.unshift(head.slice(-2)); head = head.slice(0, -2); } if (head) parts.unshift(head); out = parts.join(",") + "," + tail; }
+  return (n < 0 ? "-" : "") + "₹" + out; };
+let CUR = (DEMO && DEMO.currency) || "INR";                       // the company's currency; the model's cost stays in rupees
+const SYM = {INR: "₹", EUR: "€", GBP: "£", USD: "$"};
+const money = (x) => { if (x == null) return "-"; if (CUR === "INR") return inr(x); const n = Math.round(+x);
+  return (n < 0 ? "-" : "") + (SYM[CUR] || CUR + " ") + Math.abs(n).toLocaleString("en-GB"); };
+const short = (x) => { if (CUR === "INR") return x >= 100000 ? "₹" + (x / 100000).toFixed(2) + "L" : x >= 1000 ? "₹" + Math.round(x / 1000) + "k" : inr(x);
+  const s = SYM[CUR] || CUR + " "; return x >= 1e6 ? s + (x / 1e6).toFixed(2) + "M" : x >= 1000 ? s + Math.round(x / 1000) + "k" : money(x); };
+const name = (a) => String(a || "").split(" (")[0];
+const ORDER = {READY: 0, PARTIAL: 1, RECONCILING: 2, PROPOSED: 3, WATCH: 4, APPLIED: 5, REJECTED: 6, SUPERSEDED: 7, FAILED: 8};
+const KIND_LABEL = {approval_request: "sign", reminder: "reminder", escalation: "escalation", applied: "done", closed: "cancelled", fyi: "fyi", vp_digest: "VP digest"};
+let S = null, MSGS = [], JR = [], NEWJR = new Set(), TAB = "inbox", PERSON = "", CELL = null, QA = [], STORY = null, STEP = 0;
+
+// ------------------------------------------------------------------ data
+// Writes on AWS pass an API Gateway authorizer that wants the x-tower-key header (terraform output -raw console_key).
+// The key is asked for once, on the first refused write, and kept for this tab only.
+let KEY = (() => { try { return sessionStorage.getItem("towerKey") || ""; } catch (e) { return ""; } })();
+async function api(method, path, body, retried) {
+  const headers = {"Content-Type": "application/json"};
+  if (method !== "GET" && KEY) headers["x-tower-key"] = KEY;
+  const r = await fetch(path, {method, headers, body: body ? JSON.stringify(body) : undefined});
+  if ((r.status === 401 || r.status === 403) && method !== "GET" && !retried) {
+    const k = window.prompt("This tower needs its key for changes (terraform output -raw console_key):", "");
+    if (k) { KEY = k.trim(); try { sessionStorage.setItem("towerKey", KEY); } catch (e) {} return api(method, path, body, true); }
+  }
+  const j = await r.json();
+  return r.status === 202 && j.job_id ? waitJob(j.job_id) : j;
+}
+// On AWS a click is queued (API Gateway waits 30 s at most; a live Monday takes minutes): 202 + a job id,
+// then this polls GET /api/job/<id> until the tower has done the work. Locally the answer comes at once.
+async function waitJob(id) {
+  document.body.style.cursor = "progress";
+  try {
+    for (let i = 0; i < 600; i++) {                 // up to 15 minutes, the tower function's own limit
+      await new Promise((ok) => setTimeout(ok, 1500));
+      const r = await fetch("/api/job/" + id);
+      if (r.status !== 200) continue;
+      const j = await r.json();
+      if (j.status === "DONE" || j.status === "FAILED") return j.payload || {error: j.status};
+    }
+    return {error: "the tower is still working on this; reload in a minute"};
+  } finally { document.body.style.cursor = ""; }
+}
+async function loadLive() {
+  const st = await api("GET", "/api/state");
+  const week = st.weeks.length ? st.weeks[st.weeks.length - 1] : null;
+  const rad = week != null ? st.radar_now[String(week)] : null;
+  S = {clock: st.clock, now: st.now, week, counts: st.counts, meter: st.meter, plans: st.plans,
+       radar: rad ? {counts: rad.counts, rows: rad.rows} : {counts: {}, rows: []}, cells: {}, inflight: st.inflight};
+  if (st.currency) CUR = st.currency;
+  if (st.brand) { $("brand").textContent = st.brand; document.title = st.brand + " Control Tower"; }
+  MSGS = st.outbox; JR = st.journal; render();
+}
+if (DEMO && DEMO.brand) { document.getElementById("brand").textContent = DEMO.brand; document.title = DEMO.brand + " Control Tower"; }
+function showStep(story, i) {
+  const steps = DEMO.storylines[story].steps;
+  STORY = story; STEP = Math.max(0, Math.min(i, steps.length - 1));
+  S = steps[STEP].state; MSGS = []; JR = []; NEWJR = new Set();
+  steps.slice(0, STEP + 1).forEach((s, k) => { MSGS = MSGS.concat(s.new_messages); JR = JR.concat(s.new_journal); if (k === STEP) s.new_journal.forEach((r) => NEWJR.add(r.id || r.key)); });
+  QA = STEP === steps.length - 1 ? (DEMO.storylines[story].faq || []).map((f) => ({q: f.q, a: f.a, tools: f.tools, cost: f.cost_inr})) : [];
+  const st = steps[STEP];
+  $("banner").style.display = "block";
+  $("banner").innerHTML = `<span class="lbl">Step ${STEP + 1} of ${steps.length} · ${esc(st.clock)} · ${esc(st.label)}</span>` +
+    (st.said ? ` <span class="said">— ${esc(st.said)}</span>` : "") + (st.accepted ? "" : ` <span class="kind">duplicate key: ignored</span>`);
+  render();
+}
+
+// ------------------------------------------------------------------ render
+function render() {
+  $("clock").textContent = S.clock;
+  const c = S.counts || {};
+  $("chips").innerHTML = [["waiting", (c.READY || 0) + (c.PARTIAL || 0)], ["applied", c.APPLIED || 0], ["superseded", c.SUPERSEDED || 0], ["rejected", c.REJECTED || 0],
+    ["tower runs", S.meter.tower_runs], ["model cost", inr(S.meter.cost_inr)]].map(([k, v]) => `<span class="chip">${k} <b>${v}</b></span>`).join("");
+  renderControls(); renderRadar(); renderPlans(); renderTabs();
+}
+function renderControls() {
+  if (DEMO) {
+    const opts = Object.entries(DEMO.storylines).map(([k, v]) => `<option value="${k}" ${k === STORY ? "selected" : ""}>${esc(v.title)}</option>`).join("");
+    const n = DEMO.storylines[STORY].steps.length;
+    $("controls").innerHTML = `<span class="note">replay ·</span> <select id="story">${opts}</select> <button id="prev">◀</button> <input id="slider" type="range" min="0" max="${n - 1}" value="${STEP}" style="width:140px;vertical-align:middle"> <button id="next">▶</button>`;
+    $("story").onchange = (e) => showStep(e.target.value, 0);
+    $("prev").onclick = () => showStep(STORY, STEP - 1); $("next").onclick = () => showStep(STORY, STEP + 1);
+    $("slider").oninput = (e) => showStep(STORY, +e.target.value);
+  } else {
+    $("controls").innerHTML = `<input id="wk" type="number" min="1" value="${S.week || 12}" style="width:60px"> <button class="go" id="mon">Run Monday</button> <button id="tick">+1 h</button>`;
+    $("mon").onclick = () => post("/api/monday", {week: +$("wk").value});
+    $("tick").onclick = () => post("/api/tick", {at: (S.now || 0) + 1});
+  }
+}
+function renderRadar() {
+  const rows = (S.radar && S.radar.rows) || [];
+  $("radarweek").textContent = S.week ? `week ${S.week} snapshot, as of ${S.clock}` : "run Monday first";
+  if (S.horizon_days) $("radarh").textContent = S.horizon_days;
+  if (!rows.length) { $("radar").innerHTML = ""; return; }
+  const dcs = [...new Set(rows.map((r) => r.dc))], skus = [...new Set(rows.map((r) => r.sku))];
+  const at = (dc, sku) => rows.find((r) => r.dc === dc && r.sku === sku);
+  let h = "<tr><th></th>" + skus.map((s) => `<th>${s}</th>`).join("") + "</tr>";
+  dcs.forEach((dc) => { h += `<tr><th>${dc}</th>` + skus.map((sku) => { const r = at(dc, sku); if (!r) return "<td></td>";
+    const sel = CELL && CELL.dc === dc && CELL.sku === sku ? " sel" : "";
+    const main = r.risk === "RED" ? short(r.money_at_risk) : r.risk === "GREY" ? "stale" : r.dos0 + "d";
+    const sub = r.risk === "RED" ? "day " + r.first_short_day : r.risk === "AMBER" ? "dips" : r.risk === "GREY" ? "refresh" : r.long ? "LONG" : "cover";
+    return `<td class="${r.risk}${sel}" data-dc="${dc}" data-sku="${sku}" title="${esc(r.reason)}"><div class="m">${main}</div><div class="d" ${r.long ? 'style="color:var(--teal);font-weight:700"' : ""}>${sub}</div></td>`; }).join("") + "</tr>"; });
+  $("radar").innerHTML = h;
+  $("radar").querySelectorAll("td[data-dc]").forEach((td) => td.onclick = () => selectCell(td.dataset.dc, td.dataset.sku));
+  if (CELL) drawCell();
+}
+async function selectCell(dc, sku) { CELL = {dc, sku}; renderRadar(); }
+async function drawCell() {
+  const r = S.radar.rows.find((x) => x.dc === CELL.dc && x.sku === CELL.sku);
+  let cell = S.cells && S.cells[CELL.dc + "|" + CELL.sku];
+  if (!cell && !DEMO && S.week != null) {
+    const p = await api("GET", `/api/cell/${S.week}/${CELL.dc}/${CELL.sku}`);
+    cell = {days: p.days.map((d) => [d.day, d.start, d.demand, d.short, d.arrives, d.end]), arrivals: p.arrivals, notes: p.notes, safety_stock: p.safety_stock};
+  }
+  let h = `<div class="title">${CELL.dc} ${CELL.sku} · <span style="color:var(--${(r.risk || "grey").toLowerCase()})">${r.risk}</span> · ${r.dos0} days of cover</div><div class="reason">${esc(r.reason)}</div>`;
+  if (cell) {
+    const W = 360, H = 150, pad = 28, days = cell.days, maxv = Math.max(1, ...days.map((d) => Math.max(d[1], d[5], d[2]))), x = (i) => pad + (i - 0.5) * (W - pad - 6) / days.length, y = (v) => H - 18 - v / maxv * (H - 30);
+    const bw = (W - pad - 6) / days.length * 0.6;
+    let g = "";
+    days.forEach((d) => { const served = d[2] - d[3]; g += `<rect x="${x(d[0]) - bw / 2}" y="${y(served)}" width="${bw}" height="${H - 18 - y(served)}" fill="rgba(52,168,111,.45)"/>`;
+      if (d[3] > 0.5) g += `<rect x="${x(d[0]) - bw / 2}" y="${y(d[2])}" width="${bw}" height="${y(served) - y(d[2])}" fill="rgba(229,72,77,.8)"/>`;
+      if (d[4] > 0) { const my = Math.max(14, y(d[5]) - 6); g += `<path d="M${x(d[0])},${my} l-5,-8 h10 z" fill="#4c8df6"/><text x="${x(d[0]) + 6}" y="${my - 2}">+${Math.round(d[4])}</text>`; }
+      g += `<text x="${x(d[0]) - 3}" y="${H - 5}">${d[0]}</text>`; });
+    g += `<polyline fill="none" stroke="#dbe3ec" stroke-width="1.6" points="${days.map((d) => `${x(d[0])},${y(d[5])}`).join(" ")}"/>`;
+    if (cell.safety_stock) g += `<line x1="${pad}" x2="${W - 4}" y1="${y(cell.safety_stock)}" y2="${y(cell.safety_stock)}" stroke="#f2a93b" stroke-dasharray="4 3"/><text x="${pad + 2}" y="${y(cell.safety_stock) - 3}">safety stock</text>`;
+    g += `<text x="2" y="${y(maxv) + 8}">${Math.round(maxv)}</text><text x="2" y="${H - 18}">0</text>`;
+    h += `<svg viewBox="0 0 ${W} ${H}" width="100%">${g}</svg><div class="note">green: demand served · red: short · white line: balance at day end · blue: a truck lands</div>`;
+    h += `<div class="note" style="margin-top:4px">${(cell.arrivals || []).map((a) => `day ${a.day}: ${Math.round(a.cases).toLocaleString("en-IN")} cases (${esc(a.source)})`).join(" · ")}</div>`;
+    if (cell.notes && cell.notes.length) h += `<div class="note">${cell.notes.map(esc).join(" · ")}</div>`;
+  }
+  $("cell").innerHTML = h;
+}
+function renderPlans() {
+  const all = (S.plans || []).slice().sort((a, b) => (ORDER[a.status] - ORDER[b.status]) || a.priority.localeCompare(b.priority) || a.due_at - b.due_at);
+  const f = $("planfilter").value;
+  const shown = f === "all" ? all : all.filter((p) => p.status !== "SUPERSEDED");
+  $("plans").innerHTML = shown.length ? shown.map(planCard).join("") : `<div class="note">No plans yet. ${DEMO ? "" : "Press Run Monday."}</div>`;
+  $("plans").querySelectorAll("button[data-pid]").forEach((b) => b.onclick = () => post("/api/decide", {plan_id: b.dataset.pid, approver: b.dataset.who, decision: b.dataset.d, step: +b.dataset.step, at: (S.now || 0) + 0.25,
+    note: b.dataset.d === "REJECTED" ? (prompt("Why reject?") || "") : ""}));
+}
+$("planfilter").onchange = () => renderPlans();
+function planCard(p) {
+  const dead = ["SUPERSEDED", "REJECTED", "WATCH", "FAILED"].includes(p.status);
+  const r = p.radar || {};
+  let h = `<div class="card ${p.priority}${dead ? " dead" : ""}" id="plan-${p.plan_id}"><div class="top"><span class="pill ${p.priority}">${p.priority}</span><span class="what">${p.dc} ${p.sku || "all SKUs"} · ${p.root_cause.replace(/_/g, " ").toLowerCase()}</span><span class="st ${p.status}">${p.status}</span></div>`;
+  h += `<div class="meta">${p.plan_id} · v${p.version}${p.supersedes ? " (replaces " + p.supersedes + ")" : ""} · ${p.mode === "pre_empt" ? "pre-empt: no KPI has moved yet" : "breach"} · ${money(p.impact_inr)} at stake · due ${p.due_label}</div>`;
+  if (r.risk) h += `<div class="note">Radar: ${esc(r.reason)}</div>`;
+  if (p.steps.length) {
+    h += `<ul class="steps">` + p.steps.map((s) => { const done = s.decision; const mark = done === "APPROVED" ? "✓" : done === "REJECTED" ? "✗" : "○";
+      const detail = s.cases ? `move ${Number(s.cases).toLocaleString("en-IN")} cases ${s.from_dc}→${p.dc}, on the shelf end of day ${s.lands_end_of_day || s.lane_days}; saves ${money(s.margin_saved_inr)} for ${money(s.cost_inr)}` : esc(s.text);
+      const acts = !DEMO && !done && ["READY", "PARTIAL"].includes(p.status) ? `<span class="acts"><button class="ok" data-pid="${p.plan_id}" data-who="${esc(name(s.approver))}" data-step="${s.n}" data-d="APPROVED">✓</button><button class="no" data-pid="${p.plan_id}" data-who="${esc(name(s.approver))}" data-step="${s.n}" data-d="REJECTED">✗</button></span>` : "";
+      return `<li><span class="tick ${done || "open"}">${mark}</span><span><b>${s.code.replace(/_/g, " ")}</b>${s.revised ? ' <span class="kind">revised</span>' : ""}<br><span class="who">${esc(name(s.approver))}${done ? " · " + done.toLowerCase() + " by " + esc(s.decided_by) : ""}</span><br>${detail}</span>${acts}</li>`; }).join("") + `</ul>`;
+  }
+  const w = p.what_if;
+  if (w) { const b = w.before.money_at_risk || 1, a = w.after.money_at_risk; h += `<div class="wi"><span>radar</span><span class="bar" style="width:${Math.max(4, 120)}px"></span>${money(w.before.money_at_risk)} → <span class="bar after" style="width:${Math.max(4, 120 * a / b)}px"></span>${money(a)} at risk after the move</div>`; }
+  const extra = [];
+  if (p.dropped && p.dropped.length) extra.push(`<details><summary>dropped (${p.dropped.length})</summary><ul>${p.dropped.map((d) => `<li>${d.code} by ${d.by}: ${esc(d.reason)}</li>`).join("")}</ul></details>`);
+  if (p.reconcile && p.reconcile.length) extra.push(`<details open><summary>reconciler</summary><ul>${p.reconcile.map((n) => `<li>${esc(n)}</li>`).join("")}</ul></details>`);
+  extra.push(`<details><summary>history (${p.history.length})</summary><ul>${p.history.map((x) => `<li>${esc(x.event)}: ${esc(x.note)}</li>`).join("")}</ul></details>`);
+  return h + extra.join("") + "</div>";
+}
+function renderTabs() {
+  const tabs = [["inbox", `Inbox (${MSGS.length})`], ["journal", `Journal (${JR.filter((r) => r.id).length})`], ["events", "Send an event"], ["ask", "Ask the tower"]];
+  $("tabs").innerHTML = tabs.map(([k, l]) => `<button class="${TAB === k ? "on" : ""}" data-t="${k}">${l}</button>`).join("");
+  $("tabs").querySelectorAll("button").forEach((b) => b.onclick = () => { TAB = b.dataset.t; renderTabs(); });
+  ({inbox: renderInbox, journal: renderJournal, events: renderEvents, ask: renderAsk})[TAB]();
+}
+function renderInbox() {
+  const people = [...new Set(MSGS.map((m) => m.to))].sort();
+  let h = `<select id="person"><option value="">everyone</option>${people.map((p) => `<option ${p === PERSON ? "selected" : ""}>${esc(p)}</option>`).join("")}</select> <span class="note">one message per person per batch</span><div style="margin-top:8px">`;
+  const ms = MSGS.filter((m) => !PERSON || m.to === PERSON).slice().reverse();
+  h += ms.map((m) => `<div class="msg"><div class="h"><span class="kind ${m.kind}">${KIND_LABEL[m.kind] || m.kind}</span><span class="subj">${esc(m.subject)}</span></div><div class="note">to ${esc(m.to)} · ${esc(m.address)} · ${m.channel}</div><details><summary>open</summary><pre>${esc(m.body)}</pre></details></div>`).join("") || `<div class="note">No messages yet.</div>`;
+  $("pane").innerHTML = h + "</div>";
+  $("person").onchange = (e) => { PERSON = e.target.value; renderInbox(); };
+}
+function renderJournal() {
+  const rows = JR.filter((r) => r.id || r.status === "duplicate").slice().reverse();
+  $("pane").innerHTML = rows.map((r) => `<div class="jr ${r.status === "duplicate" ? "dup" : ""} ${NEWJR.has(r.id || r.key) ? "new" : ""}"><span class="t">${esc(r.id || "dup")} ${esc(r.type)}</span> <span class="note">${r.status === "duplicate" ? "duplicate key " + esc(r.key) + ": ignored" : esc(r.source || "")}${r.caused_by ? " · caused by " + esc(r.caused_by) : ""}</span>${(r.notes || []).map((n) => `<span class="n">${esc(n)}</span>`).join("")}</div>`).join("") || `<div class="note">The journal is empty.</div>`;
+}
+function renderEvents() {
+  if (DEMO) { $("pane").innerHTML = `<div class="note">This is a replay. To send events yourself, run the live console:<pre style="font:11.5px var(--mono)">python -m foundry.console.server --storyline blank</pre>and open http://localhost:8080.</div>`; return; }
+  const tr = (S.inflight || []).filter((t) => t.status === "IN_TRANSIT");
+  $("pane").innerHTML = `<div class="ev">
+    <div class="row"><button data-e="refresh">Rohan refreshes KOL MN-1L</button></div>
+    <div class="row"><button data-e="eta">Carrier ETA</button> CHN MN-1L slipped trucks land day <input id="eta" type="number" value="5" style="width:56px"></div>
+    <div class="row"><button data-e="strike">Strike</button> no new dispatches from <select id="plant"><option>NSK</option><option>BDI</option></select> for <input id="sd" type="number" value="4" style="width:50px"> days</div>
+    <div class="row"><button data-e="closure">Road closure</button> NSK→CHN, every truck +<input id="cd" type="number" value="3" style="width:50px"> days</div>
+    <div class="row"><button data-e="tdelay" ${tr.length ? "" : "disabled"}>Transfer breaks down</button> <select id="tid">${tr.map((t) => `<option value="${t.transfer_id}" data-d="${t.lands_day}">${t.transfer_id}</option>`).join("")}</select> +2 days</div>
+    <div class="note">Each event moves the clock on by 15 minutes. Watch the journal and the inbox.</div></div>`;
+  const at = () => (S.now || 0) + 0.25, wk = S.week || 12;
+  $("pane").querySelectorAll("button[data-e]").forEach((b) => b.onclick = () => ({
+    refresh: () => post("/api/refresh", {week: wk, dc: "KOL", sku: "MN-1L", at: at()}),
+    eta: () => post("/api/eta", {week: wk, dc: "CHN", sku: "MN-1L", eta_days: +$("eta").value, carrier: "Sahyadri Roadways", at: at()}),
+    strike: () => post("/api/lane", {week: wk, lane_from: $("plant").value, lane_to: "*", delay_days: +$("sd").value, reason: "transporters' strike: no new dispatches", applies_to: "new", at: at()}),
+    closure: () => post("/api/lane", {week: wk, lane_from: "NSK", lane_to: "CHN", delay_days: +$("cd").value, reason: "road closure", applies_to: "all", at: at()}),
+    tdelay: () => { const o = $("tid").selectedOptions[0]; post("/api/transfer", {transfer_id: o.value, lands_day: +o.dataset.d + 2, reason: "truck broke down", at: at()}); },
+  })[b.dataset.e]());
+}
+function renderAsk() {
+  let h = DEMO ? `<div class="note">Answers recorded at the end of this storyline${QA.length ? "" : " (move the slider to the last step)"}.</div>` : `<div class="row" style="display:flex;gap:6px"><input id="q" style="flex:1" placeholder="Why is Chennai waiting?"><button class="go" id="ask">Ask</button></div>`;
+  h += QA.slice().reverse().map((x) => `<div class="qa"><div class="q">${esc(x.q)}</div><div class="a">${esc(x.a)}</div><div class="tools">${(x.tools || []).join(" → ")}${x.cost != null ? " · " + inr(x.cost) : ""}</div></div>`).join("");
+  $("pane").innerHTML = h;
+  if (!DEMO) { const go = async () => { const q = $("q").value.trim(); if (!q) return; const r = await api("POST", "/api/ask", {question: q}); QA.push({q, a: r.answer ? r.answer.text : r.stop_reason, tools: r.tools, cost: r.meter && r.meter.cost_inr}); renderAsk(); };
+    $("ask").onclick = go; $("q").onkeydown = (e) => { if (e.key === "Enter") go(); }; }
+}
+async function post(path, body) { await api("POST", path, body); await loadLive(); }
+
+// ------------------------------------------------------------------ start
+if (DEMO) { const first = Object.keys(DEMO.storylines)[1] || Object.keys(DEMO.storylines)[0]; showStep(first, 0); }
+else { loadLive(); }
+const hash = () => { const m = location.hash.match(/#plan\/(.+)$/); if (m) setTimeout(() => { const el = document.getElementById("plan-" + m[1]); if (el) { el.scrollIntoView({block: "center"}); el.style.outline = "2px solid #4c8df6"; } }, 300); };
+window.addEventListener("hashchange", hash); hash();
+</script>
+</body>
+</html>
