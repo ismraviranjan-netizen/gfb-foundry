@@ -1,0 +1,202 @@
+company: Gokul Foods & Beverages (GFB), Nashik
+code: GFB
+currency: INR
+truck_cases: 1100
+holding_rate: 0.2
+contribution_share: 0.12916666666666668
+value_unit: 10000000.0
+sites:
+- code: NSK
+  name: Nashik plant
+  kind: plant
+  serves: 'beverages: nectar, juice, squash, pulp'
+- code: BDI
+  name: Baddi co-packer
+  kind: plant
+  serves: 'snacks: chakli, khakhra, namkeen, thandai'
+- code: BHW
+  name: Bhiwandi DC
+  kind: dc
+  serves: Mumbai, Pune, Gujarat
+- code: GGN
+  name: Gurgaon DC
+  kind: dc
+  serves: Delhi NCR, Punjab, UP
+- code: KOL
+  name: Kolkata DC
+  kind: dc
+  serves: East and North-East
+- code: CHN
+  name: Chennai DC
+  kind: dc
+  serves: Tamil Nadu, Kerala, Karnataka
+lanes:
+- from: NSK
+  to: BHW
+  days: 2
+  cost_per_case: 6
+- from: NSK
+  to: CHN
+  days: 5
+  cost_per_case: 16
+- from: NSK
+  to: KOL
+  days: 4
+  cost_per_case: 14
+- from: NSK
+  to: GGN
+  days: 3
+  cost_per_case: 12
+- from: BDI
+  to: GGN
+  days: 2
+  cost_per_case: 5
+- from: BDI
+  to: CHN
+  days: 7
+  cost_per_case: 22
+- from: BDI
+  to: KOL
+  days: 5
+  cost_per_case: 18
+- from: BDI
+  to: BHW
+  days: 3
+  cost_per_case: 9
+- from: BHW
+  to: CHN
+  days: 3
+  cost_per_case: 18
+- from: KOL
+  to: CHN
+  days: 4
+  cost_per_case: 22
+- from: GGN
+  to: CHN
+  days: 4
+  cost_per_case: 26
+- from: BHW
+  to: GGN
+  days: 3
+  cost_per_case: 12
+parts:
+- code: MN-1L
+  name: Mango nectar 1 L
+  class: A
+  made_at: NSK
+  cost: 480
+  units: 12
+  annual_value: 27.3
+- code: MN-200
+  name: Mango nectar 200 ml
+  class: A
+  made_at: NSK
+  cost: 300
+  units: 24
+  annual_value: 12.6
+- code: LJ-1L
+  name: Lime cooler 1 L
+  class: B
+  made_at: NSK
+  cost: 420
+  units: 12
+  annual_value: 6.3
+- code: AJ-1L
+  name: Apple juice 1 L
+  class: B
+  made_at: NSK
+  cost: 560
+  units: 12
+  annual_value: 6.2
+- code: JM-500
+  name: Jamun squash 500 ml
+  class: C
+  made_at: NSK
+  cost: 390
+  units: 12
+  annual_value: 2.0
+- code: MP-1KG
+  name: Mango pulp 1 kg (B2B)
+  class: B
+  made_at: NSK
+  cost: 1150
+  units: 10
+  annual_value: 6.9
+- code: GC-200
+  name: Chakli 200 g
+  class: A
+  made_at: BDI
+  cost: 360
+  units: 24
+  annual_value: 10.8
+- code: KH-250
+  name: Khakhra 250 g
+  class: C
+  made_at: BDI
+  cost: 330
+  units: 20
+  annual_value: 3.1
+- code: NM-500
+  name: Namkeen mix 500 g
+  class: C
+  made_at: BDI
+  cost: 410
+  units: 12
+  annual_value: 2.5
+- code: TG-250
+  name: Thandai mix 250 g
+  class: C
+  made_at: BDI
+  cost: 520
+  units: 24
+  annual_value: 1.6
+demand:
+- sku: MN-1L
+  dc: BHW
+  mean: 4200
+  sd: 500
+  lead_weeks: 1
+- sku: MN-1L
+  dc: GGN
+  mean: 3100
+  sd: 420
+  lead_weeks: 1
+- sku: MN-1L
+  dc: KOL
+  mean: 1050
+  sd: 210
+  lead_weeks: 1
+- sku: MN-1L
+  dc: CHN
+  mean: 2600
+  sd: 450
+  lead_weeks: 2
+position:
+- sku: MN-1L
+  dc: BHW
+  on_hand: 5400
+  open_receipt: 1200
+- sku: MN-1L
+  dc: GGN
+  on_hand: 4650
+  open_receipt: 0
+- sku: MN-1L
+  dc: KOL
+  on_hand: 9450
+  open_receipt: 0
+- sku: MN-1L
+  dc: CHN
+  on_hand: 1480
+  open_receipt: 0
+dc_share:
+  BHW: 0.3835616438356164
+  GGN: 0.2831050228310502
+  KOL: 0.0958904109589041
+  CHN: 0.2374429223744292
+dc_cv:
+  BHW: 0.11904761904761904
+  GGN: 0.13548387096774195
+  KOL: 0.2
+  CHN: 0.17307692307692307
+contribution_override:
+  MN-1L: 62.0
