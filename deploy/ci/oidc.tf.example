@@ -1,0 +1,42 @@
+# One-time stack: lets GitHub Actions assume a role in your account with a short-lived OIDC token, so the
+# repo holds no AWS keys. Apply it once from your laptop in its own folder (copy to deploy/ci/oidc.tf):
+#   cd deploy/ci && terraform init && terraform apply -var repo=<github-user>/gfb-foundry
+# Then put the output role_arn into the repo secret AWS_DEPLOY_ROLE_ARN, and add a required reviewer
+# to the "production" environment in the repo settings. Only that environment can assume the role.
+terraform {
+  required_providers { aws = { source = "hashicorp/aws", version = "~> 6.0" } }
+}
+provider "aws" { region = "ap-south-1" }
+variable "repo" {} # <github-user>/gfb-foundry
+
+resource "aws_iam_openid_connect_provider" "github" {
+  url            = "https://token.actions.githubusercontent.com"
+  client_id_list = ["sts.amazonaws.com"]
+}
+
+resource "aws_iam_role" "deploy" {
+  name = "gfb-foundry-github-deploy"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [{
+      Effect    = "Allow",
+      Principal = { Federated = aws_iam_openid_connect_provider.github.arn },
+      Action    = "sts:AssumeRoleWithWebIdentity",
+      Condition = {
+        StringEquals = {
+          "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com",
+          "token.actions.githubusercontent.com:sub" = "repo:${var.repo}:environment:production"
+        }
+      }
+    }]
+  })
+}
+
+# Terraform creates roles, functions, tables and an API, so the deploy role is broad. The guard is who can
+# assume it (one repo, one environment, a human reviewer), not what it can do. Narrow it later.
+resource "aws_iam_role_policy_attachment" "deploy" {
+  role       = aws_iam_role.deploy.name
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+}
+
+output "role_arn" { value = aws_iam_role.deploy.arn }
