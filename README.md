@@ -1,102 +1,141 @@
-# gfb-foundry
+# GFB Foundry: an agentic AI supply chain control tower
 
-**The Agent Foundry**: build, prove, ship and re-fit supply chain agents on one method. Four agents
-and a control tower, one codebase, one company's numbers you can check against a book you own:
-Gokul Foods & Beverages (GFB), Nashik — the six sites, ten SKUs and twelve lanes of
-*The Planner's Engine*, Appendix F. No real client, no real data.
+[![evals-gate](https://github.com/ismraviranjan-netizen/gfb-foundry/actions/workflows/evals.yml/badge.svg)](https://github.com/ismraviranjan-netizen/gfb-foundry/actions/workflows/evals.yml)
+![Python 3.13](https://img.shields.io/badge/python-3.13-blue)
+![License: MIT](https://img.shields.io/badge/license-MIT-green)
 
-| Part | Agent | Module | Evals | What it proposes |
-|---|---|---|---|---|
-| 1 | Root cause & exception management (two modes) | `foundry/agents/rca_exception/` | 30 | a cause with evidence, the money, a priority with an SLA, a playbook with named approvers |
-| 2 | Inventory rebalancing | `foundry/agents/rebalancing/` | 20 | a priced transfer between DCs, or the reason none pays |
-| 3 | Demand sensing | `foundry/agents/sensing/` | 24 | a short-horizon forecast adjustment, or silence with the back-test that says why |
-| 4 | Exception management as a queue | `foundry/agents/rca_exception/queue*.py` | 12 | the week's queue with SLA clocks, reminders, escalations and a digest |
-| 5 | The control tower (master agent) | `foundry/tower/` | 14 | one plan per breach from the specialists' findings, one approver per action |
-| 6 | Pipeline additions | `foundry/plugins.py`, `plugin_lib/`, `data/sources.py`, `levers_dynamo.py`, `ops/ledger.py` | — | a new cause, a playbook step or an urgency clock without touching the core; data from S3; the panel in DynamoDB; the cost ledger |
-| 7 | Onboarding kit | `kit/`, `profiles/` | — | three days from discovery to a passing gate for a new company |
-| 8 | Capstone | `capstone/` | — | a sealed company's data pack (Shivalik Dairy Foods) to onboard in three days |
+Three specialist AI agents (root cause, inventory rebalancing, demand sensing) work under one
+control tower agent. The tower turns a supply chain breach into a single plan, with a named human
+approver for every action. It runs on Claude through Amazon Bedrock and deploys to AWS with Terraform.
 
-## The method (Part 0)
-Discover → Map the data → Configure the profile → Build → Evaluate → Deploy → Operate → Adapt.
-Three documents carry it: the one-page canvas (`kit/canvas.md`), the company profile (`profiles/*.yaml`)
-and the data-mapping sheet (`kit/data_mapping.csv`). The core never reads a company name: structure
-comes from `foundry/network.py` (sites, lanes, SKUs, demand rows), numbers and names from the profile.
+Everything runs on a synthetic company, Gokul Foods & Beverages (GFB): six sites, ten SKUs, twelve
+lanes. No real client and no real data.
 
-## Layout
-```
-foundry/canon.py                 the GFB tables; tests assert against Appendix F
-foundry/network.py               Network: a company's structure as data (GFB default; networks/*.yaml for others)
-foundry/store.py                 the six tables (+ promos, + any plug-in table), in memory or as CSVs
-foundry/data/generate.py         weekly history from a Network with injected incidents; canonical_store(); sensing_history()
-foundry/data/sources.py          canon: | file | s3://  -> Store
-foundry/profile.py  profiles/    every company-specific number and name as data: gfb, brewer, pharma, retailer, bakery
-foundry/plugins.py  plugin_lib/  Part 6: a cause, a playbook step, an urgency clock, an override, per profile
-foundry/loop.py                  the one agent loop: Converse + tools, levers before every call, budget, cap, six stops
-foundry/scripted.py              scripted brains (offline evals and tests)
-foundry/levers.py  levers_dynamo.py   kill switch · propose-only · per-tool disable; file or DynamoDB
-foundry/approval.py              proposals -> human decision -> apply (stub for the TMS/ERP/planning call)
-foundry/bedrock_client.py        Claude on Bedrock (Converse API) + meter
-foundry/agents/rca_exception/    kpis (monitor) · diagnosis (tree) · triage · tools · prompts · agent · queue*
-foundry/agents/rebalancing/      logic (position, lanes, economics) · tools · prompts · agent · fake
-foundry/agents/sensing/          logic (series, ES, promo uplift, back-test, rule) · tools · prompts · agent · fake
-foundry/tower/                   routing (who to call, how to merge) · tools · prompts · agent · fake
-foundry/cli.py                   every lab's command
-evals/                           five labelled sets and their runners (each a CI gate), pass^k
-tests/                           the test suite
-deploy/                          Lambda handler (one function, six routes) + Terraform (API, DynamoDB x2, S3, alarm)
-.github/workflows/               evals-gate on every push; deploy behind a human approval
-ops/ledger.py                    cost per run, p95 latency, stop reasons, from runs/runs.jsonl
-kit/                             canvas, discovery, mapping, onboarding, known lies, pilot plan/scorecard, business case, demo
-capstone/                        the sealed company's data pack (no answers in here)
+![The control tower console: risk radar, plans waiting for sign-off, and the approver inbox](docs/console.png)
+
+## At a glance
+
+| | |
+|---|---|
+| Agents | Root cause & exception management, inventory rebalancing, demand sensing, plus a control tower that routes and merges their findings |
+| Model | Claude on Amazon Bedrock (Converse API), with a scripted "fake brain" so tests and evals run offline at no cost |
+| Tests | 354 automated tests |
+| Evals | 8 labelled eval sets, each gated at 90% in CI: no eval, no deploy |
+| Guardrails | Kill switch, propose-only mode, per-tool disable, human approval before any action, spend budget per run |
+| Deploy | AWS Lambda, API Gateway, DynamoDB and S3, defined in Terraform; deploy runs only after a human approves |
+
+## How it works
+
+```mermaid
+flowchart TD
+    D[Supply chain data<br/>demand, inventory, shipments, orders] --> M[KPI monitor<br/>finds breaches]
+    M --> T[Control tower agent<br/>routes, merges, one plan per breach]
+    T --> R[Root cause &<br/>exception agent]
+    T --> B[Inventory<br/>rebalancing agent]
+    T --> S[Demand<br/>sensing agent]
+    R --> T
+    B --> T
+    S --> T
+    T --> P[Proposals]
+    P --> H{Human approval}
+    H -- approved --> A[Apply to TMS / ERP / planning]
+    H -- rejected --> J[Journal and audit log]
+    L[Levers: kill switch,<br/>propose-only, spend cap] -. checked before every model call .-> T
 ```
 
-## Run it
-```
-pip install pyyaml pytest                              # boto3 only for --live and the deploy
-make test                                              # the whole suite
-make evals                                             # all five eval sets, each gated at 90%
-python3 -m foundry.cli monitor --week 12
-python3 -m foundry.cli diagnose --dc CHN --sku MN-1L --week 12            # Part 1 (scripted brain)
-python3 -m foundry.cli rebalance --sku MN-1L --week 1 --position           # Part 2 (F.11: 3,720 cases KOL->CHN)
-python3 -m foundry.cli sense --dc CHN --sku MN-1L --origin-week 16         # Part 3 (on the sensing history)
-python3 -m foundry.cli queue --week 12 --now-hours 5 --tick                # Part 4
-python3 -m foundry.cli plan --dc CHN --sku MN-1L --week 12                 # Part 5 (the tower)
-python3 -m foundry.cli plan --dc CHN --sku MN-1L --week 1 --position       # the Sarah flow with a transfer that pays
-python3 -m foundry.cli --profile brewer plan --dc CHN --sku MN-1L --week 1 --position   # same code, another company
-python3 -m foundry.cli proposals · approve PRP-... --by "Priya Nambiar" · apply PRP-... · levers kill|reset
-python3 -m foundry.cli ledger
-```
-Add `--live` to any agent command for Claude on Bedrock (`aws login --region ap-south-1`;
-model `global.anthropic.claude-sonnet-4-6` unless `FOUNDRY_MODEL` says otherwise). `--data s3://bucket/prefix`
-or a folder of CSVs (+ `network.yaml`) runs the same agents on another company's tables.
+The design rule throughout: **maths decides, the model explains and chooses.** Costs, cover days
+and transfer economics are computed in plain Python. The model picks between options that the maths
+has already priced, and explains the choice in language a planner can check.
 
-## The Control Room (the three agents as one tower)
+## Run it yourself
+
+No AWS account is needed for the default (scripted) mode.
 
 ```bash
-python3 -m foundry.cli radar --week 12                 # the 14-day risk radar: RED / AMBER / GREEN / GREY, LONG senders
-python3 -m foundry.cli story week12 --messages         # Monday 06:30 to Tuesday 15:20: refresh, refusals, escalation, a strike
-python3 -m foundry.cli story f11_monday                # F.11 through the tower; the transfer's truck breaks down on Wednesday
-python3 -m foundry.cli story one_sender                # two DCs, one sender: the reconciler adds the joint co-sign
-python3 -m foundry.cli ask "Why is the tower moving stock into Chennai?" --story week12
-python3 -m foundry.console.server --storyline blank    # the console on http://localhost:8080 (press Run Monday)
-python3 -m foundry.console.snapshot                    # out/console_demo.html: the replay, no server needed
-python3 evals/run_control_room_evals.py                # 26 storyline checks + 12 chat cases
+pip install pyyaml pytest
+make test          # the full test suite
+make evals         # every eval set, each gated at 90%
 ```
 
-`foundry/risk` projects every DC x SKU fourteen days ahead from one shared arrival schedule (the "one clock" the
-rebalancing agent now prices on). `foundry/orchestrator` is the event bus and the runtime: watcher, radar,
-orchestrator, listener, reconciler, notifier, coworker, approvals and SLA, with idempotency keys and a journal.
-`foundry/notify` writes one message per person per batch; `foundry/chat` answers questions read-only and hands
-data questions to `foundry/sqlx`; `foundry/console` is the API and the one-file page. On AWS (`deploy/tower.tf`):
-a second Lambda with reserved concurrency 1 (state in S3), the Monday cron `cron(0 1 ? * MON *)`, a custom
-event bus `gfb-tower` for carrier and data feeds, an SNS topic for approval emails.
+Try the agents from the command line:
 
-## Deploy
-`make layer && cd deploy && terraform init && terraform apply -var fake=1` for the scripted smoke test,
-then `-var fake=0`. Routes: `POST /diagnose /sweep /rebalance /sense /queue /plan`, `GET /health`.
-`.github/workflows/deploy.yml` runs every eval set and then applies only after a reviewer approves the
-`production` environment.
+```bash
+python3 -m foundry.cli monitor --week 12                              # find this week's breaches
+python3 -m foundry.cli diagnose --dc CHN --sku MN-1L --week 12        # root cause agent
+python3 -m foundry.cli rebalance --sku MN-1L --week 1 --position      # rebalancing agent
+python3 -m foundry.cli sense --dc CHN --sku MN-1L --origin-week 16    # demand sensing agent
+python3 -m foundry.cli plan --dc CHN --sku MN-1L --week 12            # the control tower
+```
 
-## Laws (the same five as the control tower)
-Maths decides, the model explains and chooses · every agent has a budget, an exit and a human ·
-tools are doors; the agent gets only its own keys · no eval, no deploy · watch cost, latency, correctness.
+Open the console shown above:
+
+```bash
+python3 -m foundry.console.server --storyline blank    # http://localhost:8080, then press Run Monday
+```
+
+Add `--live` to any agent command to use Claude on Bedrock instead of the scripted brain
+(`aws login --region ap-south-1`; set `FOUNDRY_MODEL` to choose the model).
+
+## The agents
+
+| Agent | Module | Eval cases | What it proposes |
+|---|---|---|---|
+| Root cause & exception management | `foundry/agents/rca_exception/` | 30 | A cause with evidence, the money at stake, a priority with an SLA, and a playbook with named approvers |
+| Inventory rebalancing | `foundry/agents/rebalancing/` | 20 | A priced transfer between distribution centres, or the reason none pays |
+| Demand sensing | `foundry/agents/sensing/` | 24 | A short-horizon forecast adjustment, or silence with the back-test that says why |
+| Exception queue | `foundry/agents/rca_exception/queue*.py` | 12 | The week's queue with SLA clocks, reminders, escalations and a digest |
+| Control tower | `foundry/tower/` | 14 | One plan per breach from the specialists' findings, one approver per action |
+
+Supporting pieces: a 14-day risk radar (`foundry/risk`), an event-driven orchestrator
+(`foundry/orchestrator`), a read-only chat agent with a guarded text-to-SQL helper (`foundry/chat`,
+`foundry/sqlx`), and a supply chain carbon accounting agent (`foundry/carbon`).
+
+## Guardrails
+
+- **Kill switch, propose-only and per-tool disable** (`foundry/levers.py`), checked before every model call. Backed by a file locally or DynamoDB on AWS.
+- **Human approval** (`foundry/approval.py`): agents only propose. Nothing is applied until a named person approves it.
+- **Budget and stop conditions** (`foundry/loop.py`): every agent run has a spend budget, a step cap and six defined ways to stop.
+- **Least privilege**: each agent gets only its own tools.
+- **Cost ledger** (`ops/ledger.py`): cost per run, p95 latency and stop reasons.
+
+## One codebase, many companies
+
+The core never reads a company name. Structure comes from a network file (`networks/*.yaml`) and
+every company-specific number and name from a profile (`profiles/*.yaml`). Profiles are included for
+a brewer, a pharma company, a retailer and a bakery, with industry plug-ins in `foundry/plugin_lib/`.
+
+```bash
+python3 -m foundry.cli --profile brewer plan --dc CHN --sku MN-1L --week 1 --position
+```
+
+The `kit/` folder holds the onboarding method for a new company: discovery questions, a one-page
+canvas, a data-mapping sheet and a pilot plan.
+
+## Deploy to AWS
+
+```bash
+make layer && cd deploy && terraform init && terraform apply -var fake=1   # scripted smoke test
+terraform apply -var fake=0                                               # live model
+```
+
+Routes: `POST /diagnose /sweep /rebalance /sense /queue /plan` and `GET /health`.
+The GitHub Actions deploy workflow runs every eval set first, then applies only after a reviewer
+approves the `production` environment. It uses an OIDC role, so there are no long-lived AWS keys.
+
+## Repository layout
+
+```
+foundry/            core loop, levers, approval, Bedrock client, agents, tower, console
+evals/              labelled eval sets and their runners (each one a CI gate)
+tests/              the test suite
+deploy/             Lambda handler and Terraform (API, DynamoDB, S3, alarms)
+ops/                cost and latency ledger
+profiles/ networks/ company profiles and network definitions
+kit/                onboarding kit for a new company
+labs/               decision-science labs (quantiles, newsvendor, back-testing, and more)
+capstone/           a second synthetic company's data pack for onboarding practice
+```
+
+## Author
+
+Built by [Ravi Ranjan](https://github.com/ismraviranjan-netizen). MIT licensed.
