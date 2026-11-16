@@ -1,0 +1,987 @@
+[
+ {
+  "id": "C01",
+  "kind": "clear",
+  "injections": [
+   {
+    "kind": "transport_delay",
+    "week": 12,
+    "dc": "CHN",
+    "sku": "MN-1L",
+    "params": {
+     "late_share": 0.67,
+     "late_days": 3.0,
+     "carrier": "Sahyadri Roadways"
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "TRANSPORT_DELAY",
+   "priority": "P1"
+  },
+  "note": "the canonical late truck"
+ },
+ {
+  "id": "C02",
+  "kind": "clear",
+  "injections": [
+   {
+    "kind": "transport_delay",
+    "week": 12,
+    "dc": "GGN",
+    "sku": "MN-200",
+    "params": {
+     "late_share": 0.75,
+     "late_days": 3.0,
+     "carrier": "Deccan Freight"
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "GGN",
+   "sku": "MN-200",
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "TRANSPORT_DELAY"
+  },
+  "note": ""
+ },
+ {
+  "id": "C03",
+  "kind": "clear",
+  "injections": [
+   {
+    "kind": "transport_delay",
+    "week": 12,
+    "dc": "BHW",
+    "sku": "AJ-1L",
+    "params": {
+     "late_share": 1.0,
+     "late_days": 4.0
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "BHW",
+   "sku": "AJ-1L",
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "TRANSPORT_DELAY"
+  },
+  "note": ""
+ },
+ {
+  "id": "C04",
+  "kind": "clear",
+  "injections": [
+   {
+    "kind": "dock_congestion",
+    "week": 12,
+    "dc": "GGN",
+    "sku": null,
+    "params": {
+     "dwell_h": 9.5,
+     "on_time_share": 0.82
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "GGN",
+   "sku": null,
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "DOCK_CONGESTION",
+   "priority": "P1"
+  },
+  "note": "DC-level view"
+ },
+ {
+  "id": "C05",
+  "kind": "clear",
+  "injections": [
+   {
+    "kind": "dock_congestion",
+    "week": 12,
+    "dc": "CHN",
+    "sku": null,
+    "params": {
+     "dwell_h": 8.0,
+     "on_time_share": 0.8
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "CHN",
+   "sku": null,
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "DOCK_CONGESTION"
+  },
+  "note": ""
+ },
+ {
+  "id": "C06",
+  "kind": "clear",
+  "injections": [
+   {
+    "kind": "dock_congestion",
+    "week": 12,
+    "dc": "BHW",
+    "sku": null,
+    "params": {
+     "dwell_h": 9.0,
+     "on_time_share": 0.78
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "BHW",
+   "sku": "MN-1L",
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "DOCK_CONGESTION"
+  },
+  "note": "SKU-level view of a DC-level cause"
+ },
+ {
+  "id": "C07",
+  "kind": "clear",
+  "injections": [
+   {
+    "kind": "demand_spike",
+    "week": 11,
+    "dc": "BHW",
+    "sku": "GC-200",
+    "params": {
+     "pct": 1.0
+    }
+   },
+   {
+    "kind": "demand_spike",
+    "week": 12,
+    "dc": "BHW",
+    "sku": "GC-200",
+    "params": {
+     "pct": 1.0
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "BHW",
+   "sku": "GC-200",
+   "week": 12,
+   "kpi": "DOS"
+  },
+  "expect": {
+   "root_cause": "DEMAND_SPIKE",
+   "priority": "P1"
+  },
+  "note": "Diwali chakli promo"
+ },
+ {
+  "id": "C08",
+  "kind": "clear",
+  "injections": [
+   {
+    "kind": "demand_spike",
+    "week": 11,
+    "dc": "CHN",
+    "sku": "MN-200",
+    "params": {
+     "pct": 1.2
+    }
+   },
+   {
+    "kind": "demand_spike",
+    "week": 12,
+    "dc": "CHN",
+    "sku": "MN-200",
+    "params": {
+     "pct": 1.2
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "CHN",
+   "sku": "MN-200",
+   "week": 12,
+   "kpi": "DOS"
+  },
+  "expect": {
+   "root_cause": "DEMAND_SPIKE"
+  },
+  "note": ""
+ },
+ {
+  "id": "C09",
+  "kind": "clear",
+  "injections": [
+   {
+    "kind": "demand_spike",
+    "week": 11,
+    "dc": "KOL",
+    "sku": "KH-250",
+    "params": {
+     "pct": 1.2
+    }
+   },
+   {
+    "kind": "demand_spike",
+    "week": 12,
+    "dc": "KOL",
+    "sku": "KH-250",
+    "params": {
+     "pct": 1.2
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "KOL",
+   "sku": "KH-250",
+   "week": 12,
+   "kpi": "DOS"
+  },
+  "expect": {
+   "root_cause": "DEMAND_SPIKE"
+  },
+  "note": "a C item with five orders a week"
+ },
+ {
+  "id": "C10",
+  "kind": "clear",
+  "injections": [
+   {
+    "kind": "supply_miss",
+    "week": 11,
+    "dc": "BHW",
+    "sku": "MP-1KG",
+    "params": {
+     "short_pct": 0.5
+    }
+   },
+   {
+    "kind": "supply_miss",
+    "week": 12,
+    "dc": "BHW",
+    "sku": "MP-1KG",
+    "params": {
+     "short_pct": 1.0
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "BHW",
+   "sku": "MP-1KG",
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "SUPPLY_MISS",
+   "priority": "P1"
+  },
+  "note": "pulp line down"
+ },
+ {
+  "id": "C11",
+  "kind": "clear",
+  "injections": [
+   {
+    "kind": "supply_miss",
+    "week": 11,
+    "dc": "GGN",
+    "sku": "LJ-1L",
+    "params": {
+     "short_pct": 0.6
+    }
+   },
+   {
+    "kind": "supply_miss",
+    "week": 12,
+    "dc": "GGN",
+    "sku": "LJ-1L",
+    "params": {
+     "short_pct": 1.0
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "GGN",
+   "sku": "LJ-1L",
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "SUPPLY_MISS"
+  },
+  "note": ""
+ },
+ {
+  "id": "C12",
+  "kind": "clear",
+  "injections": [
+   {
+    "kind": "supply_miss",
+    "week": 11,
+    "dc": "KOL",
+    "sku": "NM-500",
+    "params": {
+     "short_pct": 0.5
+    }
+   },
+   {
+    "kind": "supply_miss",
+    "week": 12,
+    "dc": "KOL",
+    "sku": "NM-500",
+    "params": {
+     "short_pct": 1.0
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "KOL",
+   "sku": "NM-500",
+   "week": 12,
+   "kpi": "DOS"
+  },
+  "expect": {
+   "root_cause": "SUPPLY_MISS"
+  },
+  "note": ""
+ },
+ {
+  "id": "C13",
+  "kind": "clear",
+  "injections": [
+   {
+    "kind": "data_stale",
+    "week": 12,
+    "dc": "KOL",
+    "sku": "MN-1L",
+    "params": {
+     "age_h": 36,
+     "reported_on_hand": 400
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "KOL",
+   "sku": "MN-1L",
+   "week": 12,
+   "kpi": "DOS"
+  },
+  "expect": {
+   "root_cause": "DATA_STALE",
+   "priority": "P3"
+  },
+  "note": "the trap that looks like a stockout"
+ },
+ {
+  "id": "C14",
+  "kind": "clear",
+  "injections": [
+   {
+    "kind": "data_stale",
+    "week": 12,
+    "dc": "BHW",
+    "sku": "MN-200",
+    "params": {
+     "age_h": 40,
+     "reported_on_hand": 100
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "BHW",
+   "sku": "MN-200",
+   "week": 12,
+   "kpi": "DOS"
+  },
+  "expect": {
+   "root_cause": "DATA_STALE",
+   "priority": "P3"
+  },
+  "note": ""
+ },
+ {
+  "id": "C15",
+  "kind": "clear",
+  "injections": [
+   {
+    "kind": "imbalance",
+    "week": 12,
+    "dc": "CHN",
+    "sku": "MN-1L",
+    "params": {
+     "short_on_hand": 300,
+     "long_dc": "KOL",
+     "long_on_hand": 9000
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "week": 12,
+   "kpi": "DOS"
+  },
+  "expect": {
+   "root_cause": "INVENTORY_IMBALANCE"
+  },
+  "note": "short here, long there, trucks fine"
+ },
+ {
+  "id": "A16",
+  "kind": "ambiguous",
+  "injections": [
+   {
+    "kind": "transport_delay",
+    "week": 12,
+    "dc": "CHN",
+    "sku": "MN-1L",
+    "params": {
+     "late_share": 0.67,
+     "late_days": 3.0
+    }
+   },
+   {
+    "kind": "imbalance",
+    "week": 12,
+    "dc": "CHN",
+    "sku": "MN-1L",
+    "params": {
+     "short_on_hand": 0,
+     "long_dc": "KOL",
+     "long_on_hand": 9500
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "TRANSPORT_DELAY",
+   "contributing": "INVENTORY_IMBALANCE"
+  },
+  "note": "late truck with a surplus elsewhere: transfer first"
+ },
+ {
+  "id": "A17",
+  "kind": "ambiguous",
+  "injections": [
+   {
+    "kind": "dock_congestion",
+    "week": 12,
+    "dc": "GGN",
+    "sku": null,
+    "params": {
+     "dwell_h": 9.5,
+     "on_time_share": 0.82
+    }
+   },
+   {
+    "kind": "transport_delay",
+    "week": 12,
+    "dc": "GGN",
+    "sku": "MN-1L",
+    "params": {
+     "late_share": 0.5,
+     "late_days": 1.0
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "GGN",
+   "sku": "MN-1L",
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "DOCK_CONGESTION"
+  },
+  "note": "a jammed dock and one truck a day late"
+ },
+ {
+  "id": "A18",
+  "kind": "ambiguous",
+  "injections": [
+   {
+    "kind": "demand_spike",
+    "week": 11,
+    "dc": "BHW",
+    "sku": "GC-200",
+    "params": {
+     "pct": 1.0
+    }
+   },
+   {
+    "kind": "demand_spike",
+    "week": 12,
+    "dc": "BHW",
+    "sku": "GC-200",
+    "params": {
+     "pct": 1.0
+    }
+   },
+   {
+    "kind": "supply_miss",
+    "week": 12,
+    "dc": "BHW",
+    "sku": "GC-200",
+    "params": {
+     "short_pct": 0.3
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "BHW",
+   "sku": "GC-200",
+   "week": 12,
+   "kpi": "DOS"
+  },
+  "expect": {
+   "root_cause": "DEMAND_SPIKE"
+  },
+  "note": "promo doubled sales and the plant shipped 30% short"
+ },
+ {
+  "id": "A19",
+  "kind": "ambiguous",
+  "injections": [
+   {
+    "kind": "supply_miss",
+    "week": 11,
+    "dc": "BHW",
+    "sku": "MP-1KG",
+    "params": {
+     "short_pct": 0.5
+    }
+   },
+   {
+    "kind": "supply_miss",
+    "week": 12,
+    "dc": "BHW",
+    "sku": "MP-1KG",
+    "params": {
+     "short_pct": 1.0
+    }
+   },
+   {
+    "kind": "data_stale",
+    "week": 12,
+    "dc": "BHW",
+    "sku": "MP-1KG",
+    "params": {
+     "age_h": 30
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "BHW",
+   "sku": "MP-1KG",
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "SUPPLY_MISS"
+  },
+  "note": "stale snapshot cannot explain short orders"
+ },
+ {
+  "id": "A20",
+  "kind": "ambiguous",
+  "injections": [
+   {
+    "kind": "data_stale",
+    "week": 12,
+    "dc": "KOL",
+    "sku": "MN-1L",
+    "params": {
+     "age_h": 36,
+     "reported_on_hand": 400
+    }
+   },
+   {
+    "kind": "demand_spike",
+    "week": 12,
+    "dc": "KOL",
+    "sku": "MN-1L",
+    "params": {
+     "pct": 0.5
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "KOL",
+   "sku": "MN-1L",
+   "week": 12,
+   "kpi": "DOS"
+  },
+  "expect": {
+   "root_cause": "DATA_STALE"
+  },
+  "note": "data before chain"
+ },
+ {
+  "id": "A21",
+  "kind": "ambiguous",
+  "injections": [
+   {
+    "kind": "transport_delay",
+    "week": 12,
+    "dc": "CHN",
+    "sku": "MN-1L",
+    "params": {
+     "late_share": 0.34,
+     "late_days": 1.5
+    }
+   },
+   {
+    "kind": "dock_congestion",
+    "week": 12,
+    "dc": "CHN",
+    "sku": null,
+    "params": {
+     "dwell_h": 8.5,
+     "on_time_share": 0.8
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "DOCK_CONGESTION"
+  },
+  "note": "weak transport signal, strong dock signal"
+ },
+ {
+  "id": "A22",
+  "kind": "ambiguous",
+  "injections": [
+   {
+    "kind": "demand_spike",
+    "week": 11,
+    "dc": "CHN",
+    "sku": "AJ-1L",
+    "params": {
+     "pct": 1.0
+    }
+   },
+   {
+    "kind": "demand_spike",
+    "week": 12,
+    "dc": "CHN",
+    "sku": "AJ-1L",
+    "params": {
+     "pct": 1.0
+    }
+   },
+   {
+    "kind": "transport_delay",
+    "week": 12,
+    "dc": "CHN",
+    "sku": "AJ-1L",
+    "params": {
+     "late_share": 0.67,
+     "late_days": 3.0
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "CHN",
+   "sku": "AJ-1L",
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "TRANSPORT_DELAY",
+   "contributing": "DEMAND_SPIKE"
+  },
+  "note": "tie: the planner's order of checking decides"
+ },
+ {
+  "id": "A23",
+  "kind": "ambiguous",
+  "injections": [
+   {
+    "kind": "supply_miss",
+    "week": 11,
+    "dc": "GGN",
+    "sku": "MN-1L",
+    "params": {
+     "short_pct": 1.0
+    }
+   },
+   {
+    "kind": "supply_miss",
+    "week": 12,
+    "dc": "GGN",
+    "sku": "MN-1L",
+    "params": {
+     "short_pct": 1.0
+    }
+   },
+   {
+    "kind": "dock_congestion",
+    "week": 12,
+    "dc": "GGN",
+    "sku": null,
+    "params": {
+     "dwell_h": 9.5,
+     "on_time_share": 0.82
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "GGN",
+   "sku": "MN-1L",
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "DOCK_CONGESTION",
+   "contributing": "SUPPLY_MISS"
+  },
+  "note": ""
+ },
+ {
+  "id": "A24",
+  "kind": "ambiguous",
+  "injections": [
+   {
+    "kind": "imbalance",
+    "week": 12,
+    "dc": "CHN",
+    "sku": "MN-1L",
+    "params": {
+     "short_on_hand": 300,
+     "long_dc": "KOL",
+     "long_on_hand": 9000
+    }
+   },
+   {
+    "kind": "data_stale",
+    "week": 12,
+    "dc": "CHN",
+    "sku": "MN-1L",
+    "params": {
+     "age_h": 30,
+     "reported_on_hand": 300
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "week": 12,
+   "kpi": "DOS"
+  },
+  "expect": {
+   "root_cause": "DATA_STALE"
+  },
+  "note": ""
+ },
+ {
+  "id": "A25",
+  "kind": "ambiguous",
+  "injections": [
+   {
+    "kind": "dock_congestion",
+    "week": 12,
+    "dc": "BHW",
+    "sku": null,
+    "params": {
+     "dwell_h": 9.0,
+     "on_time_share": 0.78
+    }
+   },
+   {
+    "kind": "demand_spike",
+    "week": 11,
+    "dc": "BHW",
+    "sku": "GC-200",
+    "params": {
+     "pct": 1.0
+    }
+   },
+   {
+    "kind": "demand_spike",
+    "week": 12,
+    "dc": "BHW",
+    "sku": "GC-200",
+    "params": {
+     "pct": 1.0
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "BHW",
+   "sku": null,
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "DOCK_CONGESTION",
+   "contributing": "DEMAND_SPIKE"
+  },
+  "note": "DC-level view"
+ },
+ {
+  "id": "T26",
+  "kind": "trap",
+  "injections": [],
+  "task": {
+   "mode": "diagnose",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "NO_CLEAR_CAUSE",
+   "priority": "P3"
+  },
+  "note": "nothing happened; the agent must say so"
+ },
+ {
+  "id": "T27",
+  "kind": "trap",
+  "injections": [],
+  "task": {
+   "mode": "sweep",
+   "week": 10
+  },
+  "expect": {
+   "root_cause": "NO_CLEAR_CAUSE"
+  },
+  "note": "a quiet week swept; whatever noise it picks must end in no action"
+ },
+ {
+  "id": "T28",
+  "kind": "trap",
+  "injections": [
+   {
+    "kind": "data_stale",
+    "week": 12,
+    "dc": "KOL",
+    "sku": "MN-1L",
+    "params": {
+     "age_h": 36
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "KOL",
+   "sku": "MN-1L",
+   "week": 12,
+   "kpi": "DOS"
+  },
+  "expect": {
+   "root_cause": "DATA_STALE",
+   "priority": "P3"
+  },
+  "note": "stale but plausible numbers: still a data problem"
+ },
+ {
+  "id": "T29",
+  "kind": "trap",
+  "injections": [
+   {
+    "kind": "transport_delay",
+    "week": 12,
+    "dc": "CHN",
+    "sku": "MN-1L",
+    "params": {
+     "late_share": 0.67,
+     "late_days": 1.0
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "TRANSPORT_DELAY"
+  },
+  "note": "a day late: orders ship late, nothing slips"
+ },
+ {
+  "id": "T30",
+  "kind": "trap",
+  "injections": [
+   {
+    "kind": "demand_spike",
+    "week": 12,
+    "dc": "BHW",
+    "sku": "MN-1L",
+    "params": {
+     "pct": 0.25
+    }
+   }
+  ],
+  "task": {
+   "mode": "diagnose",
+   "dc": "BHW",
+   "sku": "MN-1L",
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "NO_CLEAR_CAUSE"
+  },
+  "note": "a small spike absorbed by stock is not an incident"
+ }
+]

@@ -1,0 +1,267 @@
+[
+ {
+  "id": "Q01",
+  "kind": "order",
+  "check": "order",
+  "week": 12,
+  "profile": "gfb",
+  "now_hours": null,
+  "pre": [],
+  "fake": {},
+  "expect": {
+   "keys": [
+    "CHN:MN-1L",
+    "BHW:MP-1KG",
+    "BHW:GC-200",
+    "GGN:ALL",
+    "KOL:MN-1L",
+    "CHN:MP-1KG"
+   ],
+   "built_from": 14
+  },
+  "note": "fourteen deviations become six exceptions: P1s by money, then the P3s"
+ },
+ {
+  "id": "Q02",
+  "kind": "group",
+  "check": "group",
+  "week": 12,
+  "profile": "gfb",
+  "now_hours": null,
+  "pre": [],
+  "fake": {},
+  "expect": {
+   "key": "GGN:ALL",
+   "root_cause": "DOCK_CONGESTION",
+   "grouped_keys": [
+    "GGN:LJ-1L",
+    "GGN:MP-1KG",
+    "GGN:GC-200",
+    "GGN:MN-200"
+   ],
+   "children_count": 4
+  },
+  "note": "the dock owns every SKU-level OTIF miss at Gurgaon"
+ },
+ {
+  "id": "Q03",
+  "kind": "dedupe",
+  "check": "dedupe",
+  "week": 12,
+  "profile": "gfb",
+  "now_hours": null,
+  "pre": [],
+  "fake": {},
+  "expect": {
+   "key": "CHN:MN-1L",
+   "kpi": "OTIF",
+   "root_cause": "TRANSPORT_DELAY",
+   "confidence": 0.95,
+   "kpis_moved": [
+    "DOS",
+    "OTIF",
+    "FILL_RATE@DC",
+    "OTIF@DC"
+   ],
+   "children_count": 3
+  },
+  "note": "DOS, OTIF, and the DC's OTIF and fill rate are one exception with the surest KPI as the headline"
+ },
+ {
+  "id": "Q04",
+  "kind": "item",
+  "check": "item",
+  "week": 12,
+  "profile": "gfb",
+  "now_hours": null,
+  "pre": [],
+  "fake": {},
+  "expect": {
+   "key": "KOL:MN-1L",
+   "root_cause": "DATA_STALE",
+   "priority": "P3",
+   "impact_inr": 0,
+   "sla_hours": 72,
+   "approver_contains": "Rohan Patil"
+  },
+  "note": "stale data is never urgent and never worth money until the refresh"
+ },
+ {
+  "id": "Q05",
+  "kind": "quiet",
+  "check": "agent",
+  "week": 10,
+  "profile": "gfb",
+  "now_hours": 2,
+  "pre": [],
+  "fake": {},
+  "expect": {
+   "stop": "submitted",
+   "exceptions": 0,
+   "lines": 0,
+   "breaches": 0,
+   "headline_contains": "Quiet"
+  },
+  "note": "a quiet week is an empty queue and a one-line digest"
+ },
+ {
+  "id": "Q06",
+  "kind": "clock",
+  "check": "tick",
+  "week": 12,
+  "profile": "gfb",
+  "now_hours": 3,
+  "pre": [],
+  "fake": {},
+  "expect": {
+   "reminded": [
+    "CHN:MN-1L",
+    "BHW:MP-1KG",
+    "BHW:GC-200",
+    "GGN:ALL"
+   ],
+   "escalated": []
+  },
+  "note": "at 3 h the P1s (SLA 4 h) get their half-SLA nudge; nothing has breached"
+ },
+ {
+  "id": "Q07",
+  "kind": "clock",
+  "check": "tick",
+  "week": 12,
+  "profile": "gfb",
+  "now_hours": 5,
+  "pre": [],
+  "fake": {},
+  "expect": {
+   "reminded": [],
+   "escalated": [
+    "CHN:MN-1L",
+    "BHW:MP-1KG",
+    "BHW:GC-200",
+    "GGN:ALL"
+   ],
+   "approver_added": "Ananya Kulkarni",
+   "not_escalated": [
+    "KOL:MN-1L"
+   ]
+  },
+  "note": "at 5 h every P1 has passed its SLA and climbs to the VP; the P3 (72 h) does not"
+ },
+ {
+  "id": "Q08",
+  "kind": "clock",
+  "check": "tick",
+  "week": 12,
+  "profile": "gfb",
+  "now_hours": 30,
+  "pre": [],
+  "fake": {},
+  "expect": {
+   "reminded": [],
+   "escalated": [
+    "CHN:MN-1L",
+    "BHW:MP-1KG",
+    "BHW:GC-200",
+    "GGN:ALL"
+   ],
+   "not_reminded": [
+    "KOL:MN-1L"
+   ]
+  },
+  "note": "at 30 h the P3's reminder (36 h) has not fired yet"
+ },
+ {
+  "id": "Q09",
+  "kind": "clock",
+  "check": "tick",
+  "week": 12,
+  "profile": "brewer",
+  "now_hours": 3,
+  "pre": [],
+  "fake": {},
+  "expect": {
+   "escalated": [
+    "CHN:MN-1L",
+    "BHW:MP-1KG",
+    "BHW:GC-200",
+    "GGN:ALL"
+   ],
+   "approver_added": "Henrik Dahl"
+  },
+  "note": "the brewer's P1 SLA is 2 h: at 3 h the same items are already with the director"
+ },
+ {
+  "id": "Q10",
+  "kind": "trap",
+  "check": "tick",
+  "week": 12,
+  "profile": "gfb",
+  "now_hours": 5,
+  "pre": [
+   {
+    "decide": {
+     "key": "CHN:MN-1L",
+     "approver": "Priya Nambiar",
+     "decision": "APPROVED",
+     "at": 1.0,
+     "note": "transfer from KOL booked"
+    }
+   }
+  ],
+  "fake": {},
+  "expect": {
+   "escalated": [
+    "BHW:MP-1KG",
+    "BHW:GC-200",
+    "GGN:ALL"
+   ],
+   "not_escalated": [
+    "CHN:MN-1L"
+   ],
+   "state": {
+    "CHN:MN-1L": "APPROVED"
+   }
+  },
+  "note": "an item answered before its SLA never escalates"
+ },
+ {
+  "id": "Q11",
+  "kind": "trap",
+  "check": "agent",
+  "week": 12,
+  "profile": "gfb",
+  "now_hours": 1,
+  "pre": [],
+  "fake": {
+   "escalate_early": "CHN:MN-1L"
+  },
+  "expect": {
+   "stop": "submitted",
+   "escalated_count": 0,
+   "refused_tool": "escalate",
+   "breaches": 0
+  },
+  "note": "the agent asks to escalate at 1 h; the tool refuses; the digest is still written"
+ },
+ {
+  "id": "Q12",
+  "kind": "trap",
+  "check": "agent",
+  "week": 12,
+  "profile": "gfb",
+  "now_hours": 6,
+  "pre": [],
+  "fake": {},
+  "expect": {
+   "stop": "submitted",
+   "breaches": 4,
+   "p1_count": 4,
+   "p3_count": 1,
+   "escalated_count": 4,
+   "counts_match_queue": true,
+   "money_at_stake_inr": 347373
+  },
+  "note": "the digest's numbers must equal the queue's; a brain that skips escalation (skip_escalation=True) fails here"
+ }
+]

@@ -1,0 +1,642 @@
+[
+ {
+  "id": "C01",
+  "kind": "clear",
+  "store": "position",
+  "position": [],
+  "task": {
+   "mode": "transfer",
+   "week": 1,
+   "sku": "MN-1L"
+  },
+  "expect": {
+   "transfer": true,
+   "from_dc": "KOL",
+   "to_dc": "CHN",
+   "cases": 3720,
+   "pays": true,
+   "co_sign": false
+  },
+  "note": "F.11: Chennai short, Kolkata long; the canon answer"
+ },
+ {
+  "id": "C02",
+  "kind": "clear",
+  "store": "position",
+  "position": [
+   {
+    "dc": "BHW",
+    "sku": "MN-1L",
+    "on_hand": 17000,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   },
+   {
+    "dc": "KOL",
+    "sku": "MN-1L",
+    "on_hand": 3000,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   }
+  ],
+  "task": {
+   "mode": "transfer",
+   "week": 1,
+   "sku": "MN-1L"
+  },
+  "expect": {
+   "transfer": true,
+   "from_dc": "BHW",
+   "to_dc": "CHN",
+   "cases": 3720,
+   "pays": true,
+   "co_sign": false
+  },
+  "note": "Bhiwandi long instead: the 3-day lane"
+ },
+ {
+  "id": "C03",
+  "kind": "clear",
+  "store": "position",
+  "position": [
+   {
+    "dc": "GGN",
+    "sku": "MN-1L",
+    "on_hand": 0,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   },
+   {
+    "dc": "BHW",
+    "sku": "MN-1L",
+    "on_hand": 20000,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   },
+   {
+    "dc": "CHN",
+    "sku": "MN-1L",
+    "on_hand": 4000,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   }
+  ],
+  "task": {
+   "mode": "transfer",
+   "week": 1,
+   "sku": "MN-1L"
+  },
+  "expect": {
+   "transfer": true,
+   "from_dc": "BHW",
+   "to_dc": "GGN",
+   "cases": 900,
+   "pays": true,
+   "co_sign": false
+  },
+  "note": "Gurgaon dry; Bhiwandi is the only lane into GGN; the plant lands on day 5, so only days 4-5 can be saved: a 900-case move, not 6,200 (changed 8 Nov when the transfer-timing flaw was fixed)"
+ },
+ {
+  "id": "C04",
+  "kind": "clear",
+  "store": "position",
+  "position": [
+   {
+    "dc": "CHN",
+    "sku": "GC-200",
+    "on_hand": 400,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   },
+   {
+    "dc": "BHW",
+    "sku": "GC-200",
+    "on_hand": 9000,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   }
+  ],
+  "task": {
+   "mode": "transfer",
+   "week": 1,
+   "sku": "GC-200"
+  },
+  "expect": {
+   "transfer": true,
+   "from_dc": "BHW",
+   "to_dc": "CHN",
+   "cases": 2340,
+   "pays": true,
+   "co_sign": false
+  },
+  "note": "chakli: a two-week lead into Chennai makes the move pay"
+ },
+ {
+  "id": "C05",
+  "kind": "clear",
+  "store": "position",
+  "position": [
+   {
+    "dc": "BHW",
+    "sku": "MN-1L",
+    "on_hand": 17000,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   }
+  ],
+  "task": {
+   "mode": "transfer",
+   "week": 1,
+   "sku": "MN-1L"
+  },
+  "expect": {
+   "transfer": true,
+   "from_dc": "BHW",
+   "to_dc": "CHN",
+   "cases": 3720,
+   "pays": true,
+   "co_sign": false
+  },
+  "note": "two long DCs: the cheapest lane that lands in time wins"
+ },
+ {
+  "id": "C06",
+  "kind": "clear",
+  "store": "position",
+  "position": [
+   {
+    "dc": "CHN",
+    "sku": "MN-1L",
+    "on_hand": 0,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   }
+  ],
+  "task": {
+   "mode": "transfer",
+   "week": 1,
+   "sku": "MN-1L"
+  },
+  "expect": {
+   "transfer": true,
+   "from_dc": "KOL",
+   "to_dc": "CHN",
+   "cases": 5200,
+   "pays": true,
+   "co_sign": false
+  },
+  "note": "Chennai dry: no lane is in time, the fastest that lands before the receipt is taken"
+ },
+ {
+  "id": "C07",
+  "kind": "clear",
+  "store": "position",
+  "position": [
+   {
+    "dc": "BHW",
+    "sku": "MN-1L",
+    "on_hand": 17000,
+    "open_receipt": 0,
+    "snapshot_age_h": 30
+   }
+  ],
+  "task": {
+   "mode": "transfer",
+   "week": 1,
+   "sku": "MN-1L"
+  },
+  "expect": {
+   "transfer": true,
+   "from_dc": "KOL",
+   "to_dc": "CHN",
+   "cases": 3720,
+   "pays": true,
+   "co_sign": false
+  },
+  "note": "the cheaper sender is stale; the fresh one is taken"
+ },
+ {
+  "id": "C08",
+  "kind": "clear",
+  "store": "position",
+  "position": [
+   {
+    "dc": "GGN",
+    "sku": "GC-200",
+    "on_hand": 0,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   },
+   {
+    "dc": "BHW",
+    "sku": "GC-200",
+    "on_hand": 12000,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   },
+   {
+    "dc": "CHN",
+    "sku": "GC-200",
+    "on_hand": 4000,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   }
+  ],
+  "task": {
+   "mode": "transfer",
+   "week": 1,
+   "sku": "GC-200"
+  },
+  "expect": {
+   "transfer": true,
+   "from_dc": "BHW",
+   "to_dc": "GGN",
+   "cases": 500,
+   "pays": true,
+   "co_sign": false
+  },
+  "note": "chakli into Gurgaon: sized to the two days the 3-day lane can save (was 3,266 before the timing fix)"
+ },
+ {
+  "id": "C09",
+  "kind": "clear",
+  "store": "position",
+  "position": [
+   {
+    "dc": "CHN",
+    "sku": "MN-1L",
+    "on_hand": 2000,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   }
+  ],
+  "task": {
+   "mode": "transfer",
+   "week": 1,
+   "sku": "MN-1L"
+  },
+  "expect": {
+   "transfer": true,
+   "from_dc": "KOL",
+   "to_dc": "CHN",
+   "cases": 3200,
+   "pays": true,
+   "co_sign": false
+  },
+  "note": "Chennai at 5.4 days: a smaller top-up"
+ },
+ {
+  "id": "C10",
+  "kind": "clear",
+  "store": "position",
+  "position": [
+   {
+    "dc": "GGN",
+    "sku": "MN-1L",
+    "on_hand": 1000,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   },
+   {
+    "dc": "BHW",
+    "sku": "MN-1L",
+    "on_hand": 20000,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   },
+   {
+    "dc": "CHN",
+    "sku": "MN-1L",
+    "on_hand": 4000,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   }
+  ],
+  "task": {
+   "mode": "transfer",
+   "week": 1,
+   "sku": "MN-1L"
+  },
+  "expect": {
+   "transfer": true,
+   "from_dc": "BHW",
+   "to_dc": "GGN",
+   "cases": 900,
+   "pays": true,
+   "co_sign": false
+  },
+  "note": "topping up to 14 days would not pay once the timing is right; the gap-sized move does (was 5,200)"
+ },
+ {
+  "id": "N11",
+  "kind": "no_move",
+  "store": "position",
+  "position": [
+   {
+    "dc": "KOL",
+    "sku": "MN-1L",
+    "on_hand": 3000,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   }
+  ],
+  "task": {
+   "mode": "transfer",
+   "week": 1,
+   "sku": "MN-1L"
+  },
+  "expect": {
+   "transfer": false,
+   "alternative": "expedite_plant_run"
+  },
+  "note": "nobody is long: ask the plant"
+ },
+ {
+  "id": "C21",
+  "kind": "clear",
+  "store": "position",
+  "position": [
+   {
+    "dc": "CHN",
+    "sku": "MN-1L",
+    "on_hand": 0,
+    "open_receipt": 2000,
+    "snapshot_age_h": 2.0
+   }
+  ],
+  "task": {
+   "mode": "transfer",
+   "week": 1,
+   "sku": "MN-1L"
+  },
+  "expect": {
+   "transfer": true,
+   "from_dc": "KOL",
+   "to_dc": "CHN",
+   "cases": 3200,
+   "pays": true,
+   "co_sign": false
+  },
+  "note": "was N12 until 8 Nov: the slipped truck lands in two days, but its 2,000 cases run out on day 7 and the plant's truck lands on day 12; priced on the shared projection the move saves INR 1,06,286 for INR 70,400 of lane (the one-receipt rule said wait)"
+ },
+ {
+  "id": "N12",
+  "kind": "no_move",
+  "store": "position",
+  "position": [
+   {
+    "dc": "CHN",
+    "sku": "MN-1L",
+    "on_hand": 0,
+    "open_receipt": 5000,
+    "snapshot_age_h": 2.0
+   }
+  ],
+  "task": {
+   "mode": "transfer",
+   "week": 1,
+   "sku": "MN-1L"
+  },
+  "expect": {
+   "transfer": false,
+   "alternative": "expedite_alternate_carrier"
+  },
+  "note": "the slipped truck lands in two days and its 5,000 cases cover Chennai until the plant's truck: wait"
+ },
+ {
+  "id": "N13",
+  "kind": "no_move",
+  "store": "position",
+  "position": [
+   {
+    "dc": "CHN",
+    "sku": "TG-250",
+    "on_hand": 130,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   },
+   {
+    "dc": "KOL",
+    "sku": "TG-250",
+    "on_hand": 600,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   }
+  ],
+  "task": {
+   "mode": "transfer",
+   "week": 1,
+   "sku": "TG-250"
+  },
+  "expect": {
+   "transfer": false,
+   "alternative": null
+  },
+  "note": "a C item: the move would be 150 cases, under the 200 minimum"
+ },
+ {
+  "id": "N14",
+  "kind": "no_move",
+  "store": "position",
+  "position": [
+   {
+    "dc": "CHN",
+    "sku": "LJ-1L",
+    "on_hand": 100,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   },
+   {
+    "dc": "KOL",
+    "sku": "LJ-1L",
+    "on_hand": 3000,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   }
+  ],
+  "task": {
+   "mode": "transfer",
+   "week": 1,
+   "sku": "LJ-1L"
+  },
+  "expect": {
+   "transfer": false,
+   "alternative": null
+  },
+  "note": "one-week lead, low contribution: the move does not pay"
+ },
+ {
+  "id": "N15",
+  "kind": "no_move",
+  "store": "position",
+  "position": [
+   {
+    "dc": "KOL",
+    "sku": "MN-1L",
+    "on_hand": 500,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   },
+   {
+    "dc": "BHW",
+    "sku": "MN-1L",
+    "on_hand": 17000,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   },
+   {
+    "dc": "CHN",
+    "sku": "MN-1L",
+    "on_hand": 4000,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   }
+  ],
+  "task": {
+   "mode": "transfer",
+   "week": 1,
+   "sku": "MN-1L"
+  },
+  "expect": {
+   "transfer": false,
+   "alternative": "expedite_plant_run"
+  },
+  "note": "Kolkata short but no inter-DC lane runs into Kolkata"
+ },
+ {
+  "id": "N16",
+  "kind": "no_move",
+  "store": "position",
+  "position": [
+   {
+    "dc": "CHN",
+    "sku": "MN-1L",
+    "on_hand": 4000,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   }
+  ],
+  "task": {
+   "mode": "sweep",
+   "week": 1
+  },
+  "expect": {
+   "transfer": false,
+   "alternative": null
+  },
+  "note": "a sweep with nobody short"
+ },
+ {
+  "id": "T17",
+  "kind": "trap",
+  "store": "canonical",
+  "position": [],
+  "task": {
+   "mode": "transfer",
+   "week": 12,
+   "sku": "MN-1L"
+  },
+  "expect": {
+   "transfer": false,
+   "alternative": "refresh_snapshot"
+  },
+  "note": "week 12: Kolkata's snapshot is 36 h old; the only long DC is not to be believed"
+ },
+ {
+  "id": "T18",
+  "kind": "trap",
+  "store": "position",
+  "position": [
+   {
+    "dc": "CHN",
+    "sku": "MN-1L",
+    "on_hand": 1000,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   },
+   {
+    "dc": "GGN",
+    "sku": "MN-1L",
+    "on_hand": 1000,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   },
+   {
+    "dc": "KOL",
+    "sku": "MN-1L",
+    "on_hand": 3000,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   }
+  ],
+  "task": {
+   "mode": "transfer",
+   "week": 1,
+   "sku": "MN-1L"
+  },
+  "expect": {
+   "transfer": false,
+   "alternative": "expedite_plant_run"
+  },
+  "note": "two DCs short, nobody long"
+ },
+ {
+  "id": "T19",
+  "kind": "trap",
+  "store": "position",
+  "position": [
+   {
+    "dc": "KOL",
+    "sku": "MN-1L",
+    "on_hand": 4000,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   },
+   {
+    "dc": "CHN",
+    "sku": "MN-1L",
+    "on_hand": 0,
+    "open_receipt": 0,
+    "snapshot_age_h": 2.0
+   }
+  ],
+  "task": {
+   "mode": "transfer",
+   "week": 1,
+   "sku": "MN-1L"
+  },
+  "expect": {
+   "transfer": true,
+   "from_dc": "KOL",
+   "to_dc": "CHN",
+   "cases": 2605,
+   "pays": true,
+   "co_sign": true
+  },
+  "note": "the move takes Kolkata below its long line down to its ROP: Arjun co-signs"
+ },
+ {
+  "id": "T20",
+  "kind": "trap",
+  "store": "position",
+  "position": [
+   {
+    "dc": "CHN",
+    "sku": "MN-1L",
+    "on_hand": 1480,
+    "open_receipt": 0,
+    "snapshot_age_h": 30
+   }
+  ],
+  "task": {
+   "mode": "transfer",
+   "week": 1,
+   "sku": "MN-1L"
+  },
+  "expect": {
+   "transfer": false,
+   "alternative": "refresh_snapshot"
+  },
+  "note": "the receiver's own snapshot is stale: refresh before pulling stock towards it"
+ }
+]

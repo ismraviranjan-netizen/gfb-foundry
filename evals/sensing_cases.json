@@ -1,0 +1,583 @@
+[
+ {
+  "id": "A01",
+  "kind": "adjust",
+  "history": "sensing",
+  "task": {
+   "mode": "sense",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "origin_week": 17,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "adjust",
+   "sign": "+",
+   "co_sign": true
+  },
+  "note": "Pongal pack in the calendar for week 18, uplift calibrated on Bhiwandi's summer promo; the trend confirms week 19"
+ },
+ {
+  "id": "A02",
+  "kind": "adjust",
+  "history": "sensing",
+  "task": {
+   "mode": "sense",
+   "dc": "BHW",
+   "sku": "GC-200",
+   "origin_week": 13,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "adjust",
+   "sign": "+",
+   "co_sign": true
+  },
+  "note": "Diwali chakli weeks 14-15: the calendar says +100%, Gurgaon's past chakli promos say it realises about 80%"
+ },
+ {
+  "id": "A03",
+  "kind": "adjust",
+  "history": "sensing",
+  "task": {
+   "mode": "sense",
+   "dc": "GGN",
+   "sku": "GC-200",
+   "origin_week": 18,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "adjust",
+   "sign": "+",
+   "co_sign": true
+  },
+  "note": "year-end chakli at Gurgaon: own history (Holi, monsoon) sizes the uplift"
+ },
+ {
+  "id": "A04",
+  "kind": "adjust",
+  "history": "sensing",
+  "task": {
+   "mode": "sense",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "origin_week": 19,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "adjust",
+   "sign": "+"
+  },
+  "note": "the 1.5% a week Chennai trend, visible by week 19 without a promo"
+ },
+ {
+  "id": "A05",
+  "kind": "adjust",
+  "history": {
+   "seed": 12,
+   "weeks": 20,
+   "trend": {
+    "BHW:MN-1L": 0.02
+   },
+   "season": {},
+   "promos": [],
+   "injections": []
+  },
+  "task": {
+   "mode": "sense",
+   "dc": "BHW",
+   "sku": "MN-1L",
+   "origin_week": 18,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "adjust",
+   "sign": "+"
+  },
+  "note": "a 2% a week climb at Bhiwandi"
+ },
+ {
+  "id": "A06",
+  "kind": "adjust",
+  "history": {
+   "seed": 13,
+   "weeks": 20,
+   "trend": {
+    "GGN:GC-200": -0.015
+   },
+   "season": {},
+   "promos": [],
+   "injections": []
+  },
+  "task": {
+   "mode": "sense",
+   "dc": "GGN",
+   "sku": "GC-200",
+   "origin_week": 19,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "adjust",
+   "sign": "-"
+  },
+  "note": "chakli at Gurgaon shrinking 1.5% a week"
+ },
+ {
+  "id": "A07",
+  "kind": "adjust",
+  "history": {
+   "seed": 21,
+   "weeks": 20,
+   "trend": {},
+   "season": {
+    "CHN:MN-200": [
+     0.25,
+     20,
+     52
+    ]
+   },
+   "promos": [],
+   "injections": []
+  },
+  "task": {
+   "mode": "sense",
+   "dc": "CHN",
+   "sku": "MN-200",
+   "origin_week": 16,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "adjust",
+   "sign": "+"
+  },
+  "note": "a season rising into its peak"
+ },
+ {
+  "id": "A08",
+  "kind": "adjust",
+  "history": {
+   "seed": 22,
+   "weeks": 20,
+   "trend": {},
+   "season": {},
+   "promos": [
+    [
+     6,
+     "KOL",
+     "GC-200",
+     "Spring chakli",
+     0.5
+    ],
+    [
+     10,
+     "KOL",
+     "GC-200",
+     "Puja chakli",
+     0.5
+    ],
+    [
+     17,
+     "KOL",
+     "GC-200",
+     "Winter chakli",
+     0.5
+    ]
+   ],
+   "injections": []
+  },
+  "task": {
+   "mode": "sense",
+   "dc": "KOL",
+   "sku": "GC-200",
+   "origin_week": 16,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "adjust",
+   "sign": "+",
+   "co_sign": true
+  },
+  "note": "a promo with two of its own past promos to learn from"
+ },
+ {
+  "id": "A09",
+  "kind": "adjust",
+  "history": {
+   "seed": 23,
+   "weeks": 20,
+   "trend": {},
+   "season": {},
+   "promos": [
+    [
+     17,
+     "BHW",
+     "LJ-1L",
+     "Lime launch",
+     0.3
+    ]
+   ],
+   "injections": []
+  },
+  "task": {
+   "mode": "sense",
+   "dc": "BHW",
+   "sku": "LJ-1L",
+   "origin_week": 16,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "adjust",
+   "sign": "+",
+   "co_sign": true
+  },
+  "note": "a promo with no history: the calendar's own number, lower confidence"
+ },
+ {
+  "id": "A10",
+  "kind": "adjust",
+  "history": {
+   "seed": 14,
+   "weeks": 20,
+   "trend": {
+    "KOL:AJ-1L": -0.02
+   },
+   "season": {},
+   "promos": [],
+   "injections": []
+  },
+  "task": {
+   "mode": "sense",
+   "dc": "KOL",
+   "sku": "AJ-1L",
+   "origin_week": 19,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "adjust",
+   "sign": "-"
+  },
+  "note": "apple juice fading at Kolkata"
+ },
+ {
+  "id": "A11",
+  "kind": "adjust",
+  "history": {
+   "seed": 15,
+   "weeks": 20,
+   "trend": {
+    "GGN:MN-200": 0.025
+   },
+   "season": {},
+   "promos": [],
+   "injections": []
+  },
+  "task": {
+   "mode": "sense",
+   "dc": "GGN",
+   "sku": "MN-200",
+   "origin_week": 17,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "adjust",
+   "sign": "+"
+  },
+  "note": "small packs climbing at Gurgaon"
+ },
+ {
+  "id": "A12",
+  "kind": "adjust",
+  "history": {
+   "seed": 16,
+   "weeks": 20,
+   "trend": {
+    "CHN:MN-1L": 0.015
+   },
+   "season": {},
+   "promos": [
+    [
+     18,
+     "CHN",
+     "MN-1L",
+     "Pongal pack",
+     0.35
+    ]
+   ],
+   "injections": []
+  },
+  "task": {
+   "mode": "sense",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "origin_week": 17,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "adjust",
+   "sign": "+",
+   "co_sign": true
+  },
+  "note": "trend and a promo together"
+ },
+ {
+  "id": "S13",
+  "kind": "silent",
+  "history": "sensing",
+  "task": {
+   "mode": "sense",
+   "dc": "KOL",
+   "sku": "MN-1L",
+   "origin_week": 16,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "silent"
+  },
+  "note": "the blend won 7 of 8 held-out weeks, but the series sat above the consensus for one week only: silent, and the truth says the consensus was right"
+ },
+ {
+  "id": "S14",
+  "kind": "silent",
+  "history": "sensing",
+  "task": {
+   "mode": "sense",
+   "dc": "GGN",
+   "sku": "MN-200",
+   "origin_week": 16,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "silent"
+  },
+  "note": "the back-test keeps the consensus (w = 1): nothing beats it"
+ },
+ {
+  "id": "S15",
+  "kind": "silent",
+  "history": "sensing",
+  "task": {
+   "mode": "sense",
+   "dc": "CHN",
+   "sku": "MN-200",
+   "origin_week": 16,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "silent"
+  },
+  "note": "a 4.9% nudge is under the 5% bar"
+ },
+ {
+  "id": "S16",
+  "kind": "silent",
+  "history": "sensing",
+  "task": {
+   "mode": "sense",
+   "dc": "BHW",
+   "sku": "MN-1L",
+   "origin_week": 16,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "silent"
+  },
+  "note": "better on average, but only 4 of 8 weeks"
+ },
+ {
+  "id": "S17",
+  "kind": "silent",
+  "history": {
+   "seed": 101,
+   "weeks": 20,
+   "trend": {},
+   "season": {},
+   "promos": [],
+   "injections": []
+  },
+  "task": {
+   "mode": "sense",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "origin_week": 16,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "silent"
+  },
+  "note": "pure noise"
+ },
+ {
+  "id": "S18",
+  "kind": "silent",
+  "history": {
+   "seed": 102,
+   "weeks": 20,
+   "trend": {},
+   "season": {},
+   "promos": [],
+   "injections": []
+  },
+  "task": {
+   "mode": "sense",
+   "dc": "BHW",
+   "sku": "GC-200",
+   "origin_week": 16,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "silent"
+  },
+  "note": "pure noise"
+ },
+ {
+  "id": "S19",
+  "kind": "silent",
+  "history": {
+   "seed": 24,
+   "weeks": 20,
+   "trend": {
+    "CHN:MN-1L": 0.003
+   },
+   "season": {},
+   "promos": [],
+   "injections": []
+  },
+  "task": {
+   "mode": "sense",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "origin_week": 19,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "silent"
+  },
+  "note": "a trend too small to act on"
+ },
+ {
+  "id": "S20",
+  "kind": "silent",
+  "history": {
+   "seed": 103,
+   "weeks": 20,
+   "trend": {},
+   "season": {},
+   "promos": [],
+   "injections": []
+  },
+  "task": {
+   "mode": "sense",
+   "dc": "GGN",
+   "sku": "MN-1L",
+   "origin_week": 16,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "silent"
+  },
+  "note": "pure noise"
+ },
+ {
+  "id": "T21",
+  "kind": "trap",
+  "history": {
+   "seed": 104,
+   "weeks": 20,
+   "trend": {},
+   "season": {},
+   "promos": [],
+   "injections": [
+    [
+     "demand_spike",
+     16,
+     "BHW",
+     "MN-1L",
+     {
+      "pct": 1.0
+     }
+    ]
+   ]
+  },
+  "task": {
+   "mode": "sense",
+   "dc": "BHW",
+   "sku": "MN-1L",
+   "origin_week": 16,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "silent"
+  },
+  "note": "a one-week doubling at the origin, not in the calendar: wait a week"
+ },
+ {
+  "id": "T22",
+  "kind": "trap",
+  "history": "sensing",
+  "task": {
+   "mode": "sense",
+   "dc": "KOL",
+   "sku": "MN-200",
+   "origin_week": 10,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "silent"
+  },
+  "note": "ten closed weeks are too few to hold any out"
+ },
+ {
+  "id": "T23",
+  "kind": "trap",
+  "history": {
+   "seed": 25,
+   "weeks": 20,
+   "trend": {},
+   "season": {},
+   "promos": [
+    [
+     17,
+     "BHW",
+     "AJ-1L",
+     "Apple week",
+     0.0
+    ]
+   ],
+   "injections": []
+  },
+  "task": {
+   "mode": "sense",
+   "dc": "BHW",
+   "sku": "AJ-1L",
+   "origin_week": 16,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "silent"
+  },
+  "note": "a promo in the calendar with no number and no history: ask, do not guess"
+ },
+ {
+  "id": "T24",
+  "kind": "trap",
+  "history": {
+   "seed": 105,
+   "weeks": 20,
+   "trend": {},
+   "season": {},
+   "promos": [],
+   "injections": []
+  },
+  "task": {
+   "mode": "sense",
+   "dc": "KOL",
+   "sku": "MN-1L",
+   "origin_week": 16,
+   "horizon": 2
+  },
+  "expect": {
+   "decision": "silent"
+  },
+  "note": "the consensus already beats the smoothing: keep it"
+ }
+]

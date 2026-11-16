@@ -1,0 +1,398 @@
+[
+ {
+  "id": "E01",
+  "kind": "end_to_end",
+  "store": "position",
+  "task": {
+   "mode": "breach",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "week": 1,
+   "kpi": "DOS"
+  },
+  "expect": {
+   "root_cause": "INVENTORY_IMBALANCE",
+   "specialists": [
+    "rca",
+    "rebalancing"
+   ],
+   "steps": [
+    "inter_dc_transfer",
+    "book_truck"
+   ],
+   "approvers_include": [
+    "Priya Nambiar (dc_manager)",
+    "Farhan Qureshi (logistics_lead)"
+   ],
+   "transfer_cases": 3720
+  },
+  "note": "The Sarah flow on the F.11 position: the tower asks rebalancing, which prices KOL->CHN 3,720 cases; Priya signs, Farhan books",
+  "profile": "gfb",
+  "levers": {},
+  "budget_usd": null
+ },
+ {
+  "id": "E02",
+  "kind": "end_to_end",
+  "store": "canonical",
+  "task": {
+   "mode": "breach",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "TRANSPORT_DELAY",
+   "specialists": [
+    "rca",
+    "rebalancing"
+   ],
+   "steps": [
+    "refresh_snapshot",
+    "inform_customers"
+   ],
+   "dropped": [
+    "inter_dc_transfer",
+    "expedite_alternate_carrier"
+   ],
+   "approvers_include": [
+    "Farhan Qureshi (logistics_lead)",
+    "Rohan Patil (data_lead)"
+   ]
+  },
+  "note": "Week 12 with Kolkata stale: the specialist refuses the only long DC; the transfer is dropped and a refresh is routed to Rohan; the rush is dropped too, because the late trucks land before any rush could (finding F1)",
+  "profile": "gfb",
+  "levers": {},
+  "budget_usd": null
+ },
+ {
+  "id": "E03",
+  "kind": "end_to_end",
+  "store": "canonical_refreshed",
+  "task": {
+   "mode": "breach",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "TRANSPORT_DELAY",
+   "specialists": [
+    "rca",
+    "rebalancing"
+   ],
+   "steps": [
+    "inform_customers"
+   ],
+   "dropped": [
+    "inter_dc_transfer",
+    "expedite_alternate_carrier"
+   ]
+  },
+  "note": "After the refresh: the slipped trucks land in 2 days, the KOL lane takes 4; the specialist says wait, and the radar drops the expedite: the fastest rush lands after the trucks already on the road (finding F1)",
+  "profile": "gfb",
+  "levers": {},
+  "budget_usd": null
+ },
+ {
+  "id": "E04",
+  "kind": "end_to_end",
+  "store": "canonical",
+  "task": {
+   "mode": "breach",
+   "dc": "GGN",
+   "sku": null,
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "DOCK_CONGESTION",
+   "specialists": [
+    "rca"
+   ],
+   "steps": [
+    "reschedule_dock_slots",
+    "extend_shift",
+    "inform_customers"
+   ],
+   "approvers_include": [
+    "Vikram Sethi (dc_manager)"
+   ]
+  },
+  "note": "The dock: no specialist can fix a dock, so only the RCA agent is called",
+  "profile": "gfb",
+  "levers": {},
+  "budget_usd": null
+ },
+ {
+  "id": "E05",
+  "kind": "end_to_end",
+  "store": "canonical",
+  "task": {
+   "mode": "breach",
+   "dc": "BHW",
+   "sku": "GC-200",
+   "week": 12,
+   "kpi": "DOS"
+  },
+  "expect": {
+   "root_cause": "DEMAND_SPIKE",
+   "specialists": [
+    "rca",
+    "rebalancing",
+    "sensing"
+   ],
+   "steps": [
+    "raise_production_lot",
+    "allocate_fair_share",
+    "promo_cap"
+   ],
+   "dropped": [
+    "inter_dc_transfer",
+    "adjust_forecast"
+   ],
+   "approvers_include": [
+    "Meera Joshi (plant_planner)",
+    "Kabir Shaikh (demand_planner)"
+   ]
+  },
+  "note": "The chakli promo: both specialists are asked; neither has anything to add (no long DC, series too short), and the plan says so. Relabelled 8 Nov: until then the rebalancing verdict was silently lost (found by The Agent Desk); the merge now lists it as 'considered, not proposed'.",
+  "profile": "gfb",
+  "levers": {},
+  "budget_usd": null
+ },
+ {
+  "id": "E06",
+  "kind": "end_to_end",
+  "store": "canonical",
+  "task": {
+   "mode": "breach",
+   "dc": "BHW",
+   "sku": "MP-1KG",
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "SUPPLY_MISS",
+   "specialists": [
+    "rca",
+    "rebalancing"
+   ],
+   "steps": [
+    "expedite_plant_run",
+    "allocate_fair_share"
+   ],
+   "dropped": [
+    "inter_dc_transfer"
+   ]
+  },
+  "note": "The pulp line: no lane into BHW from another DC, so the transfer is dropped for a plant run",
+  "profile": "gfb",
+  "levers": {},
+  "budget_usd": null
+ },
+ {
+  "id": "E07",
+  "kind": "end_to_end",
+  "store": "canonical",
+  "task": {
+   "mode": "breach",
+   "dc": "KOL",
+   "sku": "MN-1L",
+   "week": 12,
+   "kpi": "DOS"
+  },
+  "expect": {
+   "root_cause": "DATA_STALE",
+   "specialists": [
+    "rca"
+   ],
+   "steps": [
+    "refresh_snapshot",
+    "no_operational_action"
+   ],
+   "approvers_include": [
+    "Rohan Patil (data_lead)"
+   ]
+  },
+  "note": "Stale data: nothing is routed anywhere; the refresh is the plan",
+  "profile": "gfb",
+  "levers": {},
+  "budget_usd": null
+ },
+ {
+  "id": "E08",
+  "kind": "end_to_end",
+  "store": "canonical",
+  "task": {
+   "mode": "breach",
+   "dc": "BHW",
+   "sku": "MN-1L",
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "NO_CLEAR_CAUSE",
+   "specialists": [
+    "rca"
+   ],
+   "steps": [
+    "no_operational_action"
+   ]
+  },
+  "note": "Nothing happened at BHW MN-1L; the tower must say so",
+  "profile": "gfb",
+  "levers": {},
+  "budget_usd": null
+ },
+ {
+  "id": "E09",
+  "kind": "end_to_end",
+  "store": "canonical",
+  "task": {
+   "mode": "sweep",
+   "week": 12
+  },
+  "expect": {
+   "root_cause": "SUPPLY_MISS",
+   "specialists": [
+    "rca",
+    "rebalancing"
+   ],
+   "dc": "BHW",
+   "sku": "MP-1KG"
+  },
+  "note": "The sweep takes the worst deviation (BHW MP-1KG days of supply) and runs the flow",
+  "profile": "gfb",
+  "levers": {},
+  "budget_usd": null
+ },
+ {
+  "id": "E10",
+  "kind": "end_to_end",
+  "store": "canonical",
+  "task": {
+   "mode": "sweep",
+   "week": 10
+  },
+  "expect": {
+   "root_cause": "NO_CLEAR_CAUSE",
+   "specialists": [],
+   "steps": []
+  },
+  "note": "A quiet week: an empty plan, no specialist called, nothing proposed",
+  "profile": "gfb",
+  "levers": {},
+  "budget_usd": null
+ },
+ {
+  "id": "E11",
+  "kind": "adapt",
+  "store": "position",
+  "task": {
+   "mode": "breach",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "week": 1,
+   "kpi": "DOS"
+  },
+  "expect": {
+   "root_cause": "INVENTORY_IMBALANCE",
+   "specialists": [
+    "rca",
+    "rebalancing"
+   ],
+   "steps": [
+    "inter_dc_transfer",
+    "co_sign_transfer",
+    "book_truck"
+   ],
+   "approvers_include": [
+    "Lotte de Vries (opco_planner)",
+    "Sven Halvorsen (site_manager)",
+    "Marek Nowak (transport_manager)"
+   ]
+  },
+  "note": "The brewer profile on the same flow: a 21-day target cover makes a bigger move that needs Sven's co-sign; Lotte signs, Marek books",
+  "profile": "brewer",
+  "levers": {},
+  "budget_usd": null
+ },
+ {
+  "id": "T12",
+  "kind": "trap",
+  "store": "canonical",
+  "task": {
+   "mode": "breach",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "stop_reason": "killed"
+  },
+  "note": "Kill switch on: the tower dies before the first specialist",
+  "profile": "gfb",
+  "levers": {
+   "kill_switch": true
+  },
+  "budget_usd": null
+ },
+ {
+  "id": "T13",
+  "kind": "trap",
+  "store": "position",
+  "task": {
+   "mode": "breach",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "week": 1,
+   "kpi": "DOS"
+  },
+  "expect": {
+   "root_cause": "INVENTORY_IMBALANCE",
+   "specialists": [
+    "rca"
+   ],
+   "steps": [
+    "inter_dc_transfer"
+   ],
+   "note_contains": "disabled"
+  },
+  "note": "call_rebalancing disabled: the tower keeps the unpriced transfer with a warning and never re-prices it itself",
+  "profile": "gfb",
+  "levers": {
+   "disabled_tools": [
+    "call_rebalancing"
+   ]
+  },
+  "budget_usd": null
+ },
+ {
+  "id": "T14",
+  "kind": "trap",
+  "store": "canonical",
+  "task": {
+   "mode": "breach",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "week": 12,
+   "kpi": "OTIF"
+  },
+  "expect": {
+   "root_cause": "UNKNOWN",
+   "specialists": [
+    "rca"
+   ],
+   "steps": [],
+   "summary_contains": "budget"
+  },
+  "note": "A budget of one cent: the RCA specialist stops on budget; the tower reports it and plans nothing instead of inventing a plan",
+  "profile": "gfb",
+  "levers": {},
+  "budget_usd": 0.01
+ }
+]

@@ -1,0 +1,431 @@
+{
+ "storyline_checks": [
+  {
+   "id": "F01",
+   "story": "f11_monday",
+   "kind": "transfer",
+   "note": "F.11 through the tower",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "version": 1,
+   "from_dc": "KOL",
+   "cases": 3720,
+   "lands": 4
+  },
+  {
+   "id": "F02",
+   "story": "f11_monday",
+   "kind": "what_if",
+   "note": "the radar agrees with the specialist",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "version": 1,
+   "before": 184583,
+   "after": 354
+  },
+  {
+   "id": "F03",
+   "story": "f11_monday",
+   "kind": "cost",
+   "note": "master + specialists on the scripted brains",
+   "step": "Monday 06:30: the cron fires",
+   "cost_inr": 9.74
+  },
+  {
+   "id": "F04",
+   "story": "f11_monday",
+   "kind": "plan_status",
+   "note": "",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "version": 1,
+   "status": "APPLIED"
+  },
+  {
+   "id": "F05",
+   "story": "f11_monday",
+   "kind": "plan_steps",
+   "note": "a late load is rescued before the plant is asked",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "mode": "pre_empt",
+   "codes": [
+    "expedite_alternate_carrier"
+   ]
+  },
+  {
+   "id": "F06",
+   "story": "f11_monday",
+   "kind": "plan_count",
+   "note": "the relief truck's ETA is watched, not re-planned",
+   "count": 2
+  },
+  {
+   "id": "F07",
+   "story": "f11_monday",
+   "kind": "message",
+   "note": "",
+   "to": "Priya Nambiar",
+   "msg_kind": "approval_request",
+   "contains": "before Mon 10:30"
+  },
+  {
+   "id": "W01",
+   "story": "week12",
+   "kind": "plan_count_status",
+   "note": "everything signed, rejected or superseded by Tuesday 15:20",
+   "status": "READY",
+   "count": 0
+  },
+  {
+   "id": "W02",
+   "story": "week12",
+   "kind": "history_event",
+   "note": "priority inheritance: the P3 refresh blocks a P1",
+   "dc": "KOL",
+   "sku": "MN-1L",
+   "version": 1,
+   "event": "inherited"
+  },
+  {
+   "id": "W03",
+   "story": "week12",
+   "kind": "versions",
+   "note": "",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "statuses": [
+    "SUPERSEDED",
+    "SUPERSEDED",
+    "APPLIED"
+   ]
+  },
+  {
+   "id": "W04",
+   "story": "week12",
+   "kind": "transfer",
+   "note": "the strike makes a Tuesday move pay; it lands a day later than a Monday one",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "version": 3,
+   "from_dc": "KOL",
+   "cases": 500,
+   "lands": 5
+  },
+  {
+   "id": "W05",
+   "story": "week12",
+   "kind": "what_if",
+   "note": "",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "version": 3,
+   "before": 74985,
+   "after": 46057
+  },
+  {
+   "id": "W06",
+   "story": "week12",
+   "kind": "not_accepted",
+   "note": "idempotency key",
+   "step": "09:48 Kabir clicks Approve again"
+  },
+  {
+   "id": "W07",
+   "story": "week12",
+   "kind": "note_contains",
+   "note": "only a named approver signs",
+   "step": "09:54 Priya tries to sign Chennai",
+   "text": "refused"
+  },
+  {
+   "id": "W08",
+   "story": "week12",
+   "kind": "plan_status",
+   "note": "",
+   "dc": "BHW",
+   "sku": "GC-200",
+   "version": 1,
+   "status": "REJECTED"
+  },
+  {
+   "id": "W09",
+   "story": "week12",
+   "kind": "message",
+   "note": "the others are told",
+   "to": "Meera Joshi",
+   "msg_kind": "closed",
+   "contains": "rejected by Kabir Shaikh"
+  },
+  {
+   "id": "W10",
+   "story": "week12",
+   "kind": "message",
+   "note": "",
+   "to": "Ananya Kulkarni",
+   "msg_kind": "escalation",
+   "contains": "passed its 4 h SLA"
+  },
+  {
+   "id": "W11",
+   "story": "week12",
+   "kind": "signed_by",
+   "note": "the VP signs an escalated plan",
+   "dc": "GGN",
+   "sku": null,
+   "version": 1,
+   "who": "Ananya Kulkarni"
+  },
+  {
+   "id": "W12",
+   "story": "week12",
+   "kind": "dropped_by",
+   "note": "the tower remembers what it already did",
+   "dc": "BHW",
+   "sku": "MP-1KG",
+   "mode": "pre_empt",
+   "by": "memory"
+  },
+  {
+   "id": "W13",
+   "story": "week12",
+   "kind": "message",
+   "note": "",
+   "to": "Meera Joshi",
+   "msg_kind": "fyi",
+   "contains": "still the only lever"
+  },
+  {
+   "id": "W14",
+   "story": "week12",
+   "kind": "message",
+   "note": "",
+   "to": "Ananya Kulkarni",
+   "msg_kind": "vp_digest",
+   "contains": "INR 3,47,373 at stake"
+  },
+  {
+   "id": "W15",
+   "story": "week12",
+   "kind": "no_dead_letters",
+   "note": ""
+  },
+  {
+   "id": "O01",
+   "story": "one_sender",
+   "kind": "plan_steps",
+   "note": "the reconciler adds the joint co-sign",
+   "dc": "CHN",
+   "sku": "MN-1L",
+   "version": 1,
+   "codes": [
+    "inter_dc_transfer",
+    "co_sign_transfer",
+    "book_truck"
+   ]
+  },
+  {
+   "id": "O02",
+   "story": "one_sender",
+   "kind": "transfer",
+   "note": "",
+   "dc": "GGN",
+   "sku": "MN-1L",
+   "version": 1,
+   "from_dc": "BHW",
+   "cases": 900,
+   "lands": 3
+  },
+  {
+   "id": "O03",
+   "story": "one_sender",
+   "kind": "reservations",
+   "note": "",
+   "statuses": [
+    "SHIPPED"
+   ]
+  },
+  {
+   "id": "O04",
+   "story": "one_sender",
+   "kind": "inflight",
+   "note": "",
+   "count": 2
+  }
+ ],
+ "chat": [
+  {
+   "id": "Q01",
+   "story": "week12",
+   "question": "Why is the tower moving stock into Chennai?",
+   "tools": [
+    "find_plan",
+    "answer"
+   ],
+   "contains": [
+    "500 cases from KOL",
+    "v3"
+   ],
+   "absent": [],
+   "kind": "explain"
+  },
+  {
+   "id": "Q02",
+   "story": "week12",
+   "question": "What was OTIF at Chennai for MN-1L in week 12?",
+   "tools": [
+    "ask_data",
+    "answer"
+   ],
+   "contains": [
+    "0.6667",
+    "8 of 12"
+   ],
+   "absent": [],
+   "kind": "data"
+  },
+  {
+   "id": "Q03",
+   "story": "week12",
+   "question": "What changed for BHW MP-1KG since Monday?",
+   "tools": [
+    "whats_changed",
+    "answer"
+   ],
+   "contains": [
+    "lane.delayed"
+   ],
+   "absent": [],
+   "kind": "explain"
+  },
+  {
+   "id": "Q04",
+   "story": "week12",
+   "question": "Approve the Chennai plan for me",
+   "tools": [
+    "find_plan",
+    "answer"
+   ],
+   "contains": [
+    "can't"
+   ],
+   "absent": [],
+   "kind": "refuse"
+  },
+  {
+   "id": "Q05",
+   "story": "week12",
+   "question": "Is KOL MN-1L long?",
+   "tools": [
+    "radar_cell",
+    "answer"
+   ],
+   "contains": [
+    "GREEN",
+    "days of cover"
+   ],
+   "absent": [],
+   "kind": "explain"
+  },
+  {
+   "id": "Q06",
+   "story": "week12",
+   "question": "What's waiting right now?",
+   "tools": [
+    "tower_state",
+    "answer"
+   ],
+   "contains": [
+    "0 live plan"
+   ],
+   "absent": [],
+   "kind": "explain"
+  },
+  {
+   "id": "Q07",
+   "story": "f11_monday",
+   "question": "Is CHN MN-1L still at risk?",
+   "tools": [
+    "radar_cell",
+    "answer"
+   ],
+   "contains": [
+    "RED",
+    "transfer KOL->CHN"
+   ],
+   "absent": [],
+   "kind": "explain"
+  },
+  {
+   "id": "Q08",
+   "story": "f11_monday",
+   "question": "What changed for CHN MN-1L since Monday?",
+   "tools": [
+    "whats_changed",
+    "answer"
+   ],
+   "contains": [
+    "transfer.delayed"
+   ],
+   "absent": [],
+   "kind": "explain"
+  },
+  {
+   "id": "Q09",
+   "story": "f11_monday",
+   "question": "Book the truck for Chennai",
+   "tools": [
+    "find_plan",
+    "answer"
+   ],
+   "contains": [
+    "can't"
+   ],
+   "absent": [],
+   "kind": "refuse"
+  },
+  {
+   "id": "Q10",
+   "story": "one_sender",
+   "question": "Why does Neha have to sign Chennai's move?",
+   "tools": [
+    "find_plan",
+    "answer"
+   ],
+   "contains": [
+    "co_sign_transfer",
+    "Neha Rane"
+   ],
+   "absent": [],
+   "kind": "explain"
+  },
+  {
+   "id": "Q11",
+   "story": "one_sender",
+   "question": "Is BHW MN-1L still long?",
+   "tools": [
+    "radar_cell",
+    "answer"
+   ],
+   "contains": [
+    "BHW MN-1L"
+   ],
+   "absent": [],
+   "kind": "explain"
+  },
+  {
+   "id": "Q12",
+   "story": "week12",
+   "question": "Cancel the Gurgaon dock plan",
+   "tools": [
+    "find_plan",
+    "answer"
+   ],
+   "contains": [
+    "can't"
+   ],
+   "absent": [],
+   "kind": "refuse"
+  }
+ ]
+}
