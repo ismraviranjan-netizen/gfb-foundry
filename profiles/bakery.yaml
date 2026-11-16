@@ -1,0 +1,75 @@
+# A direct-store-delivery bakery. Short shelf life: cover is counted in days and a long DC is a
+# DC about to write stock off. The difference that is not a number is stale returns as a cause.
+company: Sunrise Bakehouse (fictional)
+archetype: dsd_bakery
+currency: INR
+bucket: week
+horizon_weeks: 8
+
+plugins:
+  - foundry.plugin_lib.bakery_stale_returns
+
+bakery:
+  normal_return_rate: 0.06         # six per cent of delivered cases come back stale on an ordinary week
+  return_rate_factor: 1.8          # above 1.8x the baseline, returns are a cause and not a cost
+
+kpis:
+  otif_target: 0.97
+  otif_warn: 0.94
+  sku_otif_warn: 0.85
+  fill_rate_target: 0.98
+  min_dos_days: 1                  # a depot with under a day of bread is short
+  max_dos_days: 3                  # above three days it will come back stale
+  z_alert: 2.0
+  baseline_weeks: 8
+
+diagnosis:
+  demand_spike_pct: 0.20
+  late_truck_share: 0.30
+  late_truck_days: 0.3             # a bread truck seven hours late missed the morning shelf
+  dock_dwell_factor: 1.8
+  supply_short_pct: 0.10
+  max_snapshot_age_h: 6
+
+triage:
+  classes:
+    P1: {max_dos_days: 0.5, min_impact_inr: 150000, sla_hours: 2}
+    P2: {max_dos_days: 1.5, min_impact_inr: 40000, sla_hours: 8}
+    P3: {sla_hours: 48}
+  penalty_per_late_case_inr: 0
+
+approvers:
+  re_cut_route_allocation: route_planner
+  shorten_code_date_window: depot_manager
+  inter_dc_transfer: depot_manager
+  expedite_alternate_carrier: fleet_lead
+  reschedule_dock_slots: depot_manager
+  extend_shift: depot_manager
+  raise_production_lot: bakery_scheduler
+  expedite_plant_run: bakery_scheduler
+  allocate_fair_share: route_planner
+  promo_cap: trade_marketing_lead
+  inform_customers: key_account_manager
+  refresh_snapshot: data_lead
+  no_operational_action: data_lead
+  book_truck: fleet_lead
+  co_sign_transfer: depot_manager
+  adjust_forecast: demand_planner
+  co_sign_forecast: sop_lead
+  escalate: operations_director
+
+people:
+  route_planner: Joseph Fernandes
+  depot_manager: {ANY: Mahesh Gowda}
+  fleet_lead: Salim Khan
+  bakery_scheduler: Anita Reddy
+  trade_marketing_lead: Ritu Malhotra
+  key_account_manager: Prakash Rao
+  demand_planner: Kavya Sharma
+  sop_lead: Dinesh Kumar
+  data_lead: Shweta Jain
+  operations_director: Thomas George
+
+rebalance: {target_cover_days: 2, min_transfer_cases: 60, arrival_tolerance_days: 0, sender_floor: rop, fresh_only: true}
+sensing: {history_weeks: 8, alphas: [0.35, 0.5, 0.7], holdout_weeks: 4, min_adjustment_pct: 0.04, min_improvement_pct: 0.10, confirm_weeks: 1, cosign_above_pct: 0.25}
+queue: {group_dc_level_causes: [DOCK_CONGESTION, DATA_STALE], escalation: {P1: [escalate], P2: [escalate], P3: []}, reminder_at_pct: 0.5, digest_hour: 4}

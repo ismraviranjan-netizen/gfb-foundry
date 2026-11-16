@@ -1,0 +1,279 @@
+# Company profile: everything company-specific, as data. The core never reads a company name.
+company: Gokul Foods & Beverages (GFB)
+archetype: indian_cpg_fnb
+currency: INR
+bucket: week                       # planning bucket the KPIs are computed in
+horizon_weeks: 12
+
+kpis:
+  otif_target: 0.95                # the number the CFO reads
+  otif_warn: 0.92                  # below this the monitor raises an exception even if z is small
+  sku_otif_warn: 0.80              # a single SKU at a DC has few orders a week; it needs a wider band
+  fill_rate_target: 0.97
+  min_dos_days: 7                  # below this a DC is "short"
+  max_dos_days: 21                 # above this a DC is "long" (surplus available to transfer)
+  z_alert: 2.0                     # weeks that sit this many sd below the trailing baseline are deviations
+  baseline_weeks: 8
+
+diagnosis:                         # thresholds the evidence gatherers use; the tree itself is core
+  demand_spike_pct: 0.20           # actual / forecast - 1 above this = demand spike
+  late_truck_share: 0.33           # share of inbound trucks late this week above this = transport delay
+  late_truck_days: 1.0             # a truck counts as late past this many days
+  dock_dwell_factor: 2.0           # dwell this week / baseline dwell above this = dock congestion
+  supply_short_pct: 0.15           # planned receipt shortfall above this = supply miss
+  max_snapshot_age_h: 24           # older than this and the data, not the chain, is the problem
+
+triage:
+  classes:
+    P1: {max_dos_days: 3, min_impact_inr: 200000, sla_hours: 4}
+    P2: {max_dos_days: 7, min_impact_inr: 50000, sla_hours: 24}
+    P3: {sla_hours: 72}
+  penalty_per_late_case_inr: 0     # GFB has no contractual OTIF penalties with kiranas; a brewer does
+
+approvers:                         # who signs each kind of action (propose-only: the agent never executes)
+  inter_dc_transfer: dc_manager
+  expedite_alternate_carrier: logistics_lead
+  reschedule_dock_slots: dc_manager
+  extend_shift: dc_manager
+  raise_production_lot: plant_planner
+  expedite_plant_run: plant_planner
+  allocate_fair_share: demand_planner
+  promo_cap: demand_planner
+  inform_customers: logistics_lead
+  refresh_snapshot: data_lead
+  no_operational_action: data_lead
+  book_truck: logistics_lead           # Part 2: the truck for an approved transfer
+  co_sign_transfer: dc_manager         # Part 2: the sending DC manager, when the move takes them below ROP
+  adjust_forecast: demand_planner      # Part 3: a short-horizon forecast adjustment
+  co_sign_forecast: sop_lead           # Part 3: above cosign_above_pct
+  escalate: vp_supply_chain            # Part 4: an SLA that passed with no answer
+
+people:
+  dc_manager: {BHW: Neha Rane, GGN: Vikram Sethi, KOL: Arjun Dutta, CHN: Priya Nambiar}
+  logistics_lead: Farhan Qureshi
+  plant_planner: Meera Joshi
+  demand_planner: Kabir Shaikh
+  sop_lead: Devika Rao
+  data_lead: Rohan Patil
+  vp_supply_chain: Ananya Kulkarni
+
+rebalance:                           # Part 2: the inventory rebalancing agent
+  target_cover_days: 14              # F.11: top the short DC up to 14 days of cover
+  min_transfer_cases: 200            # below this a transfer is not worth a truck's time
+  arrival_tolerance_days: 1          # a lane may land this many days after the receiver runs dry
+  sender_floor: rop                  # the sender keeps at least its reorder point; below it the sender co-signs
+  fresh_only: true                   # a DC with a stale snapshot is on neither side of a transfer
+
+sensing:                             # Part 3: the demand sensing agent
+  history_weeks: 8                   # the short-horizon model reads this many closed weeks
+  alphas: [0.2, 0.35, 0.5]           # exponential smoothing candidates; the back-test picks one
+  holdout_weeks: 8                   # rolling-origin back-test over this many closed weeks (at least 4)
+  min_adjustment_pct: 0.05           # smaller nudges are noise; stay silent
+  min_improvement_pct: 0.10          # the blend must beat the consensus MAPE by this much, relative
+  min_win_share: 0.6                 # and beat it in this share of the held-out weeks, not just on average
+  confirm_weeks: 2                   # a jump must repeat before it is believed; a trend needs this many weeks on one side
+  cosign_above_pct: 0.25             # bigger adjustments need the S&OP lead too
+
+queue:                               # Part 4: exception management as a queue
+  group_dc_level_causes: [DOCK_CONGESTION, DATA_STALE]   # a DC-level cause owns the SKU-level children
+  escalation: {P1: [escalate], P2: [escalate], P3: []}   # roles that inherit an item after its SLA passes
+  reminder_at_pct: 0.5               # a nudge to the approver at half the SLA
+  digest_hour: 7
+
+risk:                                # The Control Room: the risk radar and pre-emptive plans
+  horizon_days: 14                   # project two weeks ahead, day by day
+  reliability_floor: 0.8             # a plant that delivered less than this over two weeks is assumed to keep doing so
+  pre_empt_min_inr: 25000            # a RED row worth less than this is shown, not planned
+  plant_receipt_day: 4               # the plant's weekly truck lands mid-week (end of day 4, then every 7 days)
+  history_weeks: 4                   # the plan's weekly quantity is the average planned over this many weeks
+  red_min_share_of_day: 0.25         # a shortage smaller than a quarter of a day's demand is AMBER, not RED
+
+tower:                               # The Control Room: orchestration and notification
+  monday_run_hour_ist: 6.5           # the EventBridge schedule fires at 06:30 IST (01:00 UTC)
+  timezone: Asia/Kolkata             # the wall clock the Monday schedule, the SLA ticks and the handler read
+  replan_on_eta_change_days: 1       # a carrier ETA that moves by at least this much re-plans the DC and SKU
+  notify_channels: [email]           # the outbox channel; SNS on AWS
+
+carbon:                              # The Green Ledger: logistics emissions, carbon-aware decisions, the inventory
+  checked: "2026-11-08"              # every factor below carries a label; the book's Sources appendix has the links
+  shadow_price_inr_per_t: 2500       # GFB's internal carbon price: shown next to the money, never a silent override
+  decision_method: vehicle           # a decision sees its trucks (vehicle-km); reporting uses default intensities
+  reporting_method: intensity
+  reference_sku: MN-1L               # the lane table's per-case column
+  road:
+    vehicle: heavy_cv2_diesel        # 32-ft multi-axle, GVW 20-30 t: the class GFB's carriers run
+    payload_t: 15.0                  # a full GFB truck: 1,100 cases of about 13.4 kg
+    km_per_l_loaded: 3.6             # GFB's carriers, loaded (illustrative): the fuel method's input
+    diesel_kg_per_l: {ttw: 2.675, wtt: 0.8058, label: "SFC India default v1.0 (May 2025), diesel"}
+    factors:                         # kg CO2e per tonne-km; load = utilisation, empty = empty-running share
+      small_cv_diesel:  {wtw: 0.3795, ttw: 0.2916, wtt: 0.0879, load: 0.830, empty: 0.109, label: "SFC India v1.0, small CV <3.5 t diesel, WTW"}
+      medium_cv2_diesel: {wtw: 0.1400, ttw: 0.1075, wtt: 0.0324, load: 0.788, empty: 0.108, label: "SFC India v1.0, medium CV 5-12 t diesel, WTW"}
+      heavy_cv1_diesel: {wtw: 0.0902, ttw: 0.0692, wtt: 0.0209, load: 0.768, empty: 0.124, label: "SFC India v1.0, heavy CV 12-20 t diesel, WTW"}
+      heavy_cv2_diesel: {wtw: 0.0823, ttw: 0.0632, wtt: 0.0191, load: 0.694, empty: 0.120, label: "SFC India v1.0, heavy CV 20-30 t diesel, WTW"}
+      tractor_trailer_diesel: {wtw: 0.0551, ttw: 0.0423, wtt: 0.0128, load: 0.672, empty: 0.133, label: "SFC India v1.0, tractor-trailer 30-60 t diesel, WTW"}
+  rail:
+    factor: {wtw: 0.0106, ttw: 0.0041, wtt: 0.0064, label: "SFC India v1.0, rail average 2015-16 to 2019-20, WTW"}
+    drayage_km: 30                   # the road leg at each end of a container move
+    lanes:                           # where a container-rail option exists (illustrative quotes): rail km, days door to door, rupees per case door to door
+      KOL-CHN: {km: 1660, days: 6, cost_per_case: 20}
+      NSK-KOL: {km: 1960, days: 6, cost_per_case: 10}
+      NSK-GGN: {km: 1380, days: 5, cost_per_case: 9}
+      NSK-CHN: {km: 1400, days: 7, cost_per_case: 12}
+      BDI-CHN: {km: 2600, days: 8, cost_per_case: 15}
+  air: {wtw: 1.5, label: "illustrative order of magnitude only, NOT a sourced factor: take DESNZ or GLEC before quoting"}
+  grid:                              # location-based scope 2; generation CO2 only (no upstream fuel, no T&D losses)
+    kg_per_kwh: 0.675
+    label: "CEA CO2 Baseline Database v22.0, FY 2025-26, all-India weighted average: NOT VERIFIED (CEA refuses fetches; re-checked 8 Nov 2026)"
+    verified: false
+    alt: {kg_per_kwh: 0.727, label: "CEA v20.0, FY 2023-24 weighted average (Saur Energy, 7 Jan 2025: secondary, verified)"}
+  lanes_km:                          # approximate road distance (illustrative); take the real one from the TMS
+    NSK-BHW: 150
+    NSK-CHN: 1320
+    NSK-KOL: 1850
+    NSK-GGN: 1330
+    BDI-GGN: 290
+    BDI-CHN: 2560
+    BDI-KOL: 1720
+    BDI-BHW: 1740
+    BHW-CHN: 1330
+    KOL-CHN: 1670
+    GGN-CHN: 2190
+    BHW-GGN: 1400
+  kg_per_case:                       # gross weight: product + pack + case (illustrative)
+    MN-1L: 13.4
+    MN-200: 5.6
+    LJ-1L: 13.2
+    AJ-1L: 13.3
+    JM-500: 8.1
+    MP-1KG: 11.3
+    GC-200: 5.5
+    KH-250: 5.6
+    NM-500: 6.6
+    TG-250: 6.7
+  distribution:                      # the legs after the DC (who pays decides the category, not the direction)
+    secondary: {km: 120, vehicle: medium_cv2_diesel, paid_by: GFB}         # DC to distributor: Scope 3 cat 4
+    last_mile: {km: 25, vehicle: small_cv_diesel, paid_by: distributor}   # distributor to shop: Scope 3 cat 9
+  energy:                            # owned sites (illustrative): electricity is scope 2, fuel burnt on site is scope 1
+    NSK: {kwh: 2100000, diesel_l: 380000}     # the plant: bottle blowing, hot fill, the boiler on light diesel oil
+    BHW: {kwh: 300000, diesel_l: 6000}
+    GGN: {kwh: 260000, diesel_l: 9000}
+    KOL: {kwh: 140000, diesel_l: 7000}
+    CHN: {kwh: 220000, diesel_l: 5000}
+  materials:                         # cradle-to-gate kg CO2e per kg (illustrative average data until a supplier figure is approved)
+    mango_pulp: {kg_per_kg: 0.95, supplier: ratnagiri_pulp}
+    sugar: {kg_per_kg: 0.60, supplier: deccan_sugar}
+    pet: {kg_per_kg: 2.70, supplier: peshwa_pet}
+    ldpe: {kg_per_kg: 2.00}
+    corrugated: {kg_per_kg: 0.95, supplier: tapi_corrugators}
+    aseptic_carton: {kg_per_kg: 1.20, supplier: brightfold_cartons}
+    tinplate: {kg_per_kg: 2.60, supplier: sunbeam_tinplate}
+    laminate: {kg_per_kg: 3.10, supplier: varsha_laminates}
+    lime_concentrate: {kg_per_kg: 1.20}
+    apple_concentrate: {kg_per_kg: 1.40}
+    jamun_pulp: {kg_per_kg: 0.80}
+    flour: {kg_per_kg: 0.85, supplier: annapurna_mills}
+    palm_olein: {kg_per_kg: 3.40, supplier: coastal_oils}
+    spices: {kg_per_kg: 1.50, supplier: nilgiri_spices}
+    nuts: {kg_per_kg: 3.00, supplier: konkan_cashew}
+    co_pack_fried: {kg_per_kg: 0.35, supplier: baddi_copacker}     # the co-packer's own energy: GFB's scope 3, not its scope 1
+    co_pack_roasted: {kg_per_kg: 0.25, supplier: baddi_copacker}
+    co_pack_mixed: {kg_per_kg: 0.15, supplier: baddi_copacker}
+  bom:                               # kg of each material in one case (illustrative)
+    MN-1L: {mango_pulp: 3.6, sugar: 1.2, pet: 0.42, corrugated: 0.35, ldpe: 0.05}
+    MN-200: {mango_pulp: 1.44, sugar: 0.48, aseptic_carton: 0.22, corrugated: 0.30}
+    LJ-1L: {lime_concentrate: 0.6, sugar: 1.0, pet: 0.42, corrugated: 0.35}
+    AJ-1L: {apple_concentrate: 1.8, pet: 0.42, corrugated: 0.35}
+    JM-500: {jamun_pulp: 1.2, sugar: 3.0, pet: 0.34, corrugated: 0.30}
+    MP-1KG: {mango_pulp: 10.0, tinplate: 0.85, corrugated: 0.40}
+    GC-200: {flour: 3.2, palm_olein: 1.3, spices: 0.3, laminate: 0.19, corrugated: 0.50, co_pack_fried: 4.8}
+    KH-250: {flour: 4.4, palm_olein: 0.4, spices: 0.2, laminate: 0.10, corrugated: 0.50, co_pack_roasted: 5.0}
+    NM-500: {flour: 3.6, palm_olein: 1.8, spices: 0.6, laminate: 0.10, corrugated: 0.50, co_pack_fried: 6.0}
+    TG-250: {sugar: 3.6, nuts: 1.2, spices: 1.2, laminate: 0.20, corrugated: 0.50, co_pack_mixed: 6.0}
+  end_of_life_kg_per_kg:             # packaging after use, India's mix of recycling, landfill and burning (illustrative)
+    pet: 0.35
+    ldpe: 0.60
+    aseptic_carton: 0.45
+    corrugated: 0.25
+    tinplate: 0.05
+    laminate: 0.90
+  suppliers:                         # the supplier carbon agent reads these: annual spend (INR) and the spend-based class
+    ratnagiri_pulp: {name: "Ratnagiri Pulp Udyog", material: mango_pulp, spend_inr: 120000000, eeio: food_processing}
+    deccan_sugar: {name: "Deccan Sugar Sahkari", material: sugar, spend_inr: 52000000, eeio: sugar}
+    peshwa_pet: {name: "Peshwa Preforms", material: pet, spend_inr: 61000000, eeio: plastics}
+    tapi_corrugators: {name: "Tapi Corrugators", material: corrugated, spend_inr: 38000000, eeio: paper_products}
+    brightfold_cartons: {name: "Brightfold Aseptic Cartons", material: aseptic_carton, spend_inr: 21000000, eeio: paper_products}
+    sunbeam_tinplate: {name: "Sunbeam Tinplate", material: tinplate, spend_inr: 19000000, eeio: metal_products}
+    varsha_laminates: {name: "Varsha Laminates", material: laminate, spend_inr: 24000000, eeio: plastics}
+    annapurna_mills: {name: "Annapurna Roller Mills", material: flour, spend_inr: 47000000, eeio: food_processing}
+    coastal_oils: {name: "Coastal Edible Oils", material: palm_olein, spend_inr: 66000000, eeio: food_processing}
+    nilgiri_spices: {name: "Nilgiri Spice Blends", material: spices, spend_inr: 31000000, eeio: food_processing}
+    konkan_cashew: {name: "Konkan Cashew Works", material: nuts, spend_inr: 29000000, eeio: food_processing}
+    baddi_copacker: {name: "Baddi co-packer", material: co_pack_fried, spend_inr: 90000000, eeio: food_processing}
+  eeio_kg_per_inr:                   # spend-based factors: ILLUSTRATIVE placeholders; replace with a sourced EEIO table at a stated year and exchange rate
+    food_processing: 0.0062
+    sugar: 0.0080
+    plastics: 0.0105
+    paper_products: 0.0071
+    metal_products: 0.0098
+  approvers:                         # the carbon actions the roles in `people` sign
+    approve_emission_factor: data_lead
+    approve_mode_shift: logistics_lead
+    request_supplier_data: data_lead   # the supplier carbon agent's asks go out only when the data lead approves
+  # appended 8 Nov 2026 (The Green Ledger, second writer): the keys below extend the carbon section
+  payload_t_by_vehicle:              # rated payload by class (illustrative): the vehicle method's truck size
+    small_cv_diesel: 1.5
+    medium_cv2_diesel: 7.0
+    heavy_cv1_diesel: 10.0
+    heavy_cv2_diesel: 15.0
+    tractor_trailer_diesel: 25.0
+  expedite:                          # carrier quotes for a rush move (illustrative): door-to-door days, rupees per case
+    NSK-CHN:
+      wait_for_next_run: {vehicle: heavy_cv2_diesel, days: 5, wait_days: 3, cost_per_case: 16, shared: true}
+      dedicated_now: {vehicle: heavy_cv2_diesel, days: 5, cost_per_case: 19}
+      express_now: {vehicle: medium_cv2_diesel, days: 3, cost_per_case: 34}
+    KOL-CHN:
+      dedicated_now: {vehicle: heavy_cv2_diesel, days: 4, cost_per_case: 22}
+      express_now: {vehicle: medium_cv2_diesel, days: 3, cost_per_case: 36}
+  scope3_screening:                  # GHG Protocol's 15 categories: GFB's call on each (the core prints it, never decides it)
+    1: {status: computed, why: "materials, packaging and the co-packer's service: the biggest by far"}
+    2: {status: screened_small, why: "capital goods: a filler line every few years; screen once a year"}
+    3: {status: computed, why: "the well-to-tank part of the diesel GFB burns on site; grid losses not yet in"}
+    4: {status: computed, why: "GFB pays the trucks: plant to DC, DC to DC and DC to distributor"}
+    5: {status: screened_small, why: "plant waste: mango peel and stones go to cattle feed and compost"}
+    6: {status: screened_small, why: "business travel"}
+    7: {status: screened_small, why: "employee commuting"}
+    8: {status: not_applicable, why: "no upstream leased assets: the plant and the four DCs are owned"}
+    9: {status: computed, why: "the distributor pays the last mile to the shop"}
+    10: {status: screened_small, why: "MP-1KG pulp is processed by B2B buyers: ask them, it is small"}
+    11: {status: not_applicable, why: "a juice uses no energy in use (a fridge is indirect, optional)"}
+    12: {status: computed, why: "packaging after use: PET, laminate, cartons, tins, board"}
+    13: {status: not_applicable, why: "no downstream leased assets"}
+    14: {status: not_applicable, why: "no franchises"}
+    15: {status: not_applicable, why: "no investments to report"}
+  supplier_data:                     # the supplier carbon agent's rules (Part V of The Green Ledger)
+    accept_dqr: 2.0                  # a supplier figure at or below this data-quality rating may replace the average
+    caveat_dqr: 3.0                  # up to this it is proposed with a caveat; above it the average stays and we ask again
+    max_age_years: 3                 # older than this and the time indicator scores poor
+    reporting_year: 2026
+    product_tolerance: 0.02          # an extracted value must be within 2% of the expected one in the evals
+    primary_min_share: 0.5           # a figure counts as primary when at least half of it comes from the supplier's own site data
+    plausible_ratio: [0.3, 3.0]      # outside this band against the average, an unassured figure is checked before it is used
+    dqr_scale: "1 best to 5 worst (GFB's own rule, PEF-style); PACT's own DQR scale was not re-checked: always say which scale"
+    default_validity_years: 3        # no validity period stated: valid this long after the reference period ends (assumption, S19)
+    land_use_materials: [mango_pulp, sugar, palm_olein, flour, spices, nuts, jamun_pulp, lime_concentrate, apple_concentrate]
+  sources:                           # which Sources-appendix entry stands behind each block above (ILL = illustrative, GFB = GFB's own data)
+    road: S1
+    rail: S1
+    diesel: S1
+    grid: S5
+    air: ILL
+    lanes_km: ILL
+    kg_per_case: ILL
+    payload: ILL
+    expedite: ILL
+    materials: ILL
+    end_of_life: ILL
+    eeio: ILL
+    energy: GFB
+    spend: GFB
+    distribution: ILL

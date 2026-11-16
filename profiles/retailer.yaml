@@ -1,0 +1,71 @@
+# A grocery retailer's DC network. The difference that is not a number is the clock: urgency is
+# hours to the next store delivery wave, so the profile names the delivery-wave plug-in.
+company: Everyday Grocers (fictional)
+archetype: grocery_retailer
+currency: INR
+bucket: week
+horizon_weeks: 8
+
+plugins:
+  - foundry.plugin_lib.retail_delivery_wave
+
+delivery_waves:
+  hours: [6, 14]                   # stores are replenished in two waves a day
+  now_hour: 4                      # the monitor runs at 04:00, two hours before the first wave
+
+kpis:
+  otif_target: 0.96
+  otif_warn: 0.93
+  sku_otif_warn: 0.85
+  fill_rate_target: 0.97
+  min_dos_days: 3                  # fresh and fast movers: three days is thin, ten is long
+  max_dos_days: 10
+  z_alert: 2.0
+  baseline_weeks: 8
+
+diagnosis:
+  demand_spike_pct: 0.20
+  late_truck_share: 0.30
+  late_truck_days: 0.5
+  dock_dwell_factor: 1.8
+  supply_short_pct: 0.10
+  max_snapshot_age_h: 1            # store-level stock is read hourly
+
+triage:
+  classes:
+    P1: {max_dos_days: 1, min_impact_inr: 300000, sla_hours: 2}
+    P2: {max_dos_days: 3, min_impact_inr: 75000, sla_hours: 12}
+    P3: {sla_hours: 48}
+  penalty_per_late_case_inr: 0     # the chargeback is per missed slot; modelled as a plug-in later
+
+approvers:
+  inter_dc_transfer: replenishment_lead
+  expedite_alternate_carrier: transport_lead
+  reschedule_dock_slots: dc_manager
+  extend_shift: dc_manager
+  raise_production_lot: supplier_manager
+  expedite_plant_run: supplier_manager
+  allocate_fair_share: replenishment_lead
+  promo_cap: category_manager
+  inform_customers: store_ops_lead
+  refresh_snapshot: data_lead
+  no_operational_action: data_lead
+  book_truck: transport_lead
+  co_sign_transfer: dc_manager
+  adjust_forecast: replenishment_lead
+  co_sign_forecast: category_manager
+  escalate: supply_chain_director
+
+people:
+  replenishment_lead: Sunita Pillai
+  transport_lead: Imran Shaikh
+  dc_manager: {ANY: Deepak Rawat}
+  supplier_manager: Gauri Deshpande
+  category_manager: Anil Chopra
+  store_ops_lead: Rekha Nair
+  data_lead: Harsh Vardhan
+  supply_chain_director: Leena Thomas
+
+rebalance: {target_cover_days: 6, min_transfer_cases: 100, arrival_tolerance_days: 0, sender_floor: rop, fresh_only: true}
+sensing: {history_weeks: 8, alphas: [0.2, 0.35, 0.5], holdout_weeks: 4, min_adjustment_pct: 0.05, min_improvement_pct: 0.10, confirm_weeks: 1, cosign_above_pct: 0.30}
+queue: {group_dc_level_causes: [DOCK_CONGESTION, DATA_STALE], escalation: {P1: [escalate], P2: [escalate], P3: []}, reminder_at_pct: 0.5, digest_hour: 5}

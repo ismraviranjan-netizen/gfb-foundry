@@ -1,0 +1,73 @@
+# A pharma distributor. Same core; the difference that is not a number is QA release, so the
+# profile names a plug-in. Lot-level data, long cover, a one-hour P1.
+company: Meridian Pharma Distribution (fictional)
+archetype: pharma_distributor
+currency: INR
+bucket: week
+horizon_weeks: 13
+
+plugins:
+  - foundry.plugin_lib.pharma_qa_release
+
+qa:
+  hold_share: 0.10                 # held cases above this share of the week's receipts = a QA_HOLD cause
+
+kpis:
+  otif_target: 0.99
+  otif_warn: 0.98
+  sku_otif_warn: 0.95
+  fill_rate_target: 0.995
+  min_dos_days: 30                 # pharma holds 30-120 days by design; shelf life bounds the max
+  max_dos_days: 120
+  z_alert: 2.0
+  baseline_weeks: 8
+
+diagnosis:
+  demand_spike_pct: 0.25
+  late_truck_share: 0.25
+  late_truck_days: 0.5             # a cold-chain truck late by half a day is a breach
+  dock_dwell_factor: 1.5
+  supply_short_pct: 0.10
+  max_snapshot_age_h: 2            # lot-level stock is read every two hours
+
+triage:
+  classes:
+    P1: {max_dos_days: 7, min_impact_inr: 500000, sla_hours: 1}
+    P2: {max_dos_days: 30, min_impact_inr: 100000, sla_hours: 8}
+    P3: {sla_hours: 48}
+  penalty_per_late_case_inr: 0     # service credits are contractual per account; modelled in Part 6 as a plug-in later
+
+approvers:
+  qa_release: qa_lead
+  expedite_qa_retest: qa_lead
+  inter_dc_transfer: dc_manager
+  expedite_alternate_carrier: logistics_lead
+  reschedule_dock_slots: dc_manager
+  extend_shift: dc_manager
+  raise_production_lot: supply_planner
+  expedite_plant_run: supply_planner
+  allocate_fair_share: demand_planner
+  promo_cap: demand_planner
+  inform_customers: key_account_manager
+  refresh_snapshot: data_lead
+  no_operational_action: data_lead
+  book_truck: logistics_lead
+  co_sign_transfer: dc_manager
+  adjust_forecast: demand_planner
+  co_sign_forecast: sop_lead
+  escalate: supply_chain_head
+
+people:
+  qa_lead: Dr. Shalini Iyer
+  dc_manager: {ANY: Rajesh Menon}
+  logistics_lead: Abdul Karim
+  supply_planner: Nidhi Bansal
+  demand_planner: Tarun Mehta
+  sop_lead: Sanjana Rao
+  key_account_manager: Vivek Anand
+  data_lead: Pooja Verma
+  supply_chain_head: Dr. Arvind Krishnan
+
+rebalance: {target_cover_days: 45, min_transfer_cases: 50, arrival_tolerance_days: 0, sender_floor: rop, fresh_only: true}
+sensing: {history_weeks: 8, alphas: [0.2, 0.35, 0.5], holdout_weeks: 4, min_adjustment_pct: 0.05, min_improvement_pct: 0.10, confirm_weeks: 2, cosign_above_pct: 0.15}
+queue: {group_dc_level_causes: [DOCK_CONGESTION, DATA_STALE], escalation: {P1: [escalate], P2: [escalate], P3: []}, reminder_at_pct: 0.5, digest_hour: 7}
