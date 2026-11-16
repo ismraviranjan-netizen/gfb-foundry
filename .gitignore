@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+runs/
+data/out/
+data/sensing/
+deploy/build/
+deploy/layer/
+deploy/.terraform/
+deploy/*.tfstate*
+evals/results.json
+evals/*_results.json
+panel.json
+.pytest_cache/

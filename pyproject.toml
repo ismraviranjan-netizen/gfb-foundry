@@ -1,0 +1,14 @@
+[project]
+name = "gfb-foundry"
+version = "1.0.0"
+description = "The Agent Foundry: four supply chain agents and a control tower on one method. Universe: Gokul Foods & Beverages."
+requires-python = ">=3.10"
+dependencies = ["pyyaml>=6.0"]
+
+[project.optional-dependencies]
+aws = ["boto3>=1.35"]
+dev = ["pytest>=8", "python-hcl2>=4"]
+labs = ["numpy>=1.26", "pandas>=2.1"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
