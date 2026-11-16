@@ -1,0 +1,29 @@
+{
+ "specVersion": "PACT-style (a GFB fixture; field names modelled on the PACT data model, not a conformant PACT file)",
+ "id": "CEO-2025-PO",
+ "companyName": "Coastal Edible Oils",
+ "productDescription": "Palm olein, refined, tanker",
+ "material": "palm_olein",
+ "declaredUnit": "kilogram",
+ "unitaryProductAmount": 1.0,
+ "pCfExcludingBiogenic": 0.95,
+ "boundary": "cradle-to-gate",
+ "referencePeriodStart": "2024-04-01",
+ "referencePeriodEnd": "2025-03-31",
+ "geographyCountry": "IN",
+ "crossSectoralStandardsUsed": [
+  "ISO 14067"
+ ],
+ "primaryDataShare": 40.0,
+ "dqi": {
+  "coveragePercent": 70,
+  "technologicalDQR": 2.0,
+  "temporalDQR": 2.0,
+  "geographicalDQR": 2.4,
+  "completenessDQR": 2.6,
+  "reliabilityDQR": 2.0
+ },
+ "assurance": {
+  "assurance": false
+ }
+}

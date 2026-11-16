@@ -1,0 +1,34 @@
+{
+ "specVersion": "PACT-style (a GFB fixture; field names modelled on the PACT data model, not a conformant PACT file)",
+ "id": "BAC-2025-AC",
+ "companyName": "Brightfold Aseptic Cartons",
+ "productDescription": "Aseptic carton blank, 200 ml",
+ "material": "aseptic_carton",
+ "declaredUnit": "kilogram",
+ "unitaryProductAmount": 1.0,
+ "pCfExcludingBiogenic": 1.55,
+ "pCfIncludingBiogenic": 1.21,
+ "fossilGhgEmissions": 1.55,
+ "boundary": "cradle-to-grave",
+ "referencePeriodStart": "2024-01-01",
+ "referencePeriodEnd": "2024-12-31",
+ "validityPeriodEnd": "2027-12-31",
+ "geographyCountry": "IN",
+ "crossSectoralStandardsUsed": [
+  "ISO 14067"
+ ],
+ "primaryDataShare": 66.0,
+ "dqi": {
+  "coveragePercent": 90,
+  "technologicalDQR": 1.7,
+  "temporalDQR": 1.6,
+  "geographicalDQR": 1.9,
+  "completenessDQR": 2.0,
+  "reliabilityDQR": 1.8
+ },
+ "assurance": {
+  "assurance": true,
+  "level": "limited",
+  "providerName": "an independent verifier (third party)"
+ }
+}

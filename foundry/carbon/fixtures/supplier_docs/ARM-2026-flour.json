@@ -1,0 +1,35 @@
+{
+ "specVersion": "PACT-style (a GFB fixture; field names modelled on the PACT data model, not a conformant PACT file)",
+ "id": "ARM-2026-FL",
+ "companyName": "Annapurna Roller Mills",
+ "productDescription": "Rice and gram flour blend for chakli, 25 kg bag",
+ "material": "flour",
+ "declaredUnit": "kilogram",
+ "unitaryProductAmount": 1.0,
+ "pCfExcludingBiogenic": 0.81,
+ "pCfIncludingBiogenic": 0.8,
+ "fossilGhgEmissions": 0.81,
+ "dLucGhgEmissions": 0.0,
+ "boundary": "cradle-to-gate",
+ "referencePeriodStart": "2025-04-01",
+ "referencePeriodEnd": "2026-03-31",
+ "validityPeriodEnd": "2028-03-31",
+ "geographyCountry": "IN",
+ "crossSectoralStandardsUsed": [
+  "GHG Protocol Product Standard"
+ ],
+ "primaryDataShare": 64.0,
+ "dqi": {
+  "coveragePercent": 93,
+  "technologicalDQR": 1.8,
+  "temporalDQR": 1.5,
+  "geographicalDQR": 1.9,
+  "completenessDQR": 2.2,
+  "reliabilityDQR": 2.1
+ },
+ "assurance": {
+  "assurance": true,
+  "level": "limited",
+  "providerName": "an independent verifier (third party)"
+ }
+}

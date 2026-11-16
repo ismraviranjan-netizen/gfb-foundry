@@ -1,0 +1,32 @@
+{
+ "specVersion": "PACT-style (a GFB fixture; field names modelled on the PACT data model, not a conformant PACT file)",
+ "id": "PPF-2025-PR",
+ "companyName": "Peshwa Preforms",
+ "productDescription": "PET preform for a 1 L bottle, 35 g",
+ "material": "pet",
+ "declaredUnit": "piece",
+ "unitaryProductAmount": 1.0,
+ "unitMassKg": 0.035,
+ "pCfExcludingBiogenic": 0.0896,
+ "fossilGhgEmissions": 0.0896,
+ "boundary": "cradle-to-gate",
+ "referencePeriodStart": "2024-04-01",
+ "referencePeriodEnd": "2025-03-31",
+ "validityPeriodEnd": "2027-03-31",
+ "geographyCountry": "IN",
+ "crossSectoralStandardsUsed": [
+  "ISO 14067"
+ ],
+ "primaryDataShare": 55.0,
+ "dqi": {
+  "coveragePercent": 92,
+  "technologicalDQR": 2.2,
+  "temporalDQR": 2.0,
+  "geographicalDQR": 2.4,
+  "completenessDQR": 2.6,
+  "reliabilityDQR": 2.8
+ },
+ "assurance": {
+  "assurance": false
+ }
+}

@@ -1,0 +1,65 @@
+{
+ "note": "Made-up documents from GFB's made-up suppliers (The Green Ledger). Not real companies, not real PCFs.",
+ "docs": [
+  {
+   "doc_id": "RPU-2023-mango-pulp",
+   "file": "RPU-2023-mango-pulp.json",
+   "supplier": "ratnagiri_pulp",
+   "received": "2023-06-12"
+  },
+  {
+   "doc_id": "RPU-2026-mango-pulp",
+   "file": "RPU-2026-mango-pulp.json",
+   "supplier": "ratnagiri_pulp",
+   "received": "2026-06-30"
+  },
+  {
+   "doc_id": "DSS-2022-sugar",
+   "file": "DSS-2022-sugar.json",
+   "supplier": "deccan_sugar",
+   "received": "2022-09-01"
+  },
+  {
+   "doc_id": "PPF-2025-pet-preform",
+   "file": "PPF-2025-pet-preform.json",
+   "supplier": "peshwa_pet",
+   "received": "2025-07-15"
+  },
+  {
+   "doc_id": "TAPI-2025-letter",
+   "file": "TAPI-2025-letter.txt",
+   "supplier": "tapi_corrugators",
+   "received": "2025-08-14"
+  },
+  {
+   "doc_id": "BAC-2025-aseptic-carton",
+   "file": "BAC-2025-aseptic-carton.json",
+   "supplier": "brightfold_cartons",
+   "received": "2025-04-20"
+  },
+  {
+   "doc_id": "VL-2026-letter",
+   "file": "VL-2026-letter.txt",
+   "supplier": "varsha_laminates",
+   "received": "2026-02-02"
+  },
+  {
+   "doc_id": "ARM-2026-flour",
+   "file": "ARM-2026-flour.json",
+   "supplier": "annapurna_mills",
+   "received": "2026-07-08"
+  },
+  {
+   "doc_id": "CEO-2025-palm-olein",
+   "file": "CEO-2025-palm-olein.json",
+   "supplier": "coastal_oils",
+   "received": "2025-06-03"
+  },
+  {
+   "doc_id": "BCP-2026-letter",
+   "file": "BCP-2026-letter.txt",
+   "supplier": "baddi_copacker",
+   "received": "2026-05-20"
+  }
+ ]
+}

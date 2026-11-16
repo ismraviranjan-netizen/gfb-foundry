@@ -1,0 +1,32 @@
+{
+ "specVersion": "PACT-style (a GFB fixture; field names modelled on the PACT data model, not a conformant PACT file)",
+ "id": "DSS-2022-SG",
+ "companyName": "Deccan Sugar Sahkari",
+ "productDescription": "Refined sugar S-30, 50 kg bag",
+ "material": "sugar",
+ "declaredUnit": "kilogram",
+ "unitaryProductAmount": 1.0,
+ "pCfExcludingBiogenic": 0.48,
+ "pCfIncludingBiogenic": 0.41,
+ "fossilGhgEmissions": 0.42,
+ "dLucGhgEmissions": 0.06,
+ "boundary": "cradle-to-gate",
+ "referencePeriodStart": "2021-04-01",
+ "referencePeriodEnd": "2022-03-31",
+ "geographyCountry": "IN",
+ "crossSectoralStandardsUsed": [
+  "GHG Protocol Product Standard"
+ ],
+ "primaryDataShare": 58.0,
+ "dqi": {
+  "coveragePercent": 85,
+  "technologicalDQR": 1.8,
+  "temporalDQR": 2.0,
+  "geographicalDQR": 1.6,
+  "completenessDQR": 2.0,
+  "reliabilityDQR": 2.1
+ },
+ "assurance": {
+  "assurance": false
+ }
+}

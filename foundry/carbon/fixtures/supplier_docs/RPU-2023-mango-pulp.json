@@ -1,0 +1,33 @@
+{
+ "specVersion": "PACT-style (a GFB fixture; field names modelled on the PACT data model, not a conformant PACT file)",
+ "id": "RPU-2023-MP",
+ "companyName": "Ratnagiri Pulp Udyog",
+ "productDescription": "Alphonso mango pulp, aseptic, 210 kg drum",
+ "material": "mango_pulp",
+ "declaredUnit": "kilogram",
+ "unitaryProductAmount": 1.0,
+ "pCfExcludingBiogenic": 0.84,
+ "pCfIncludingBiogenic": 0.79,
+ "fossilGhgEmissions": 0.8,
+ "dLucGhgEmissions": 0.04,
+ "boundary": "cradle-to-gate",
+ "referencePeriodStart": "2022-04-01",
+ "referencePeriodEnd": "2023-03-31",
+ "validityPeriodEnd": "2026-03-31",
+ "geographyCountry": "IN",
+ "crossSectoralStandardsUsed": [
+  "ISO 14067"
+ ],
+ "primaryDataShare": 60.0,
+ "dqi": {
+  "coveragePercent": 90,
+  "technologicalDQR": 1.8,
+  "temporalDQR": 1.6,
+  "geographicalDQR": 1.5,
+  "completenessDQR": 2.2,
+  "reliabilityDQR": 2.0
+ },
+ "assurance": {
+  "assurance": false
+ }
+}
