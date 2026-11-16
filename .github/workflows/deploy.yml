@@ -1,0 +1,42 @@
+# Part 6: the apply behind the gate. Runs only by hand, only after every eval set passes, and only
+# after a named reviewer approves the "production" environment in the repo settings -- the same
+# shape as the agent's own approval, one level up.
+name: deploy
+on:
+  workflow_dispatch:
+    inputs:
+      fake:
+        description: "1 = scripted brain (smoke), 0 = live model"
+        default: "0"
+
+jobs:
+  evals:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13" }
+      - run: pip install pyyaml pytest
+      - run: python -m pytest -q
+      - run: python evals/run_evals.py --threshold 0.9
+      - run: for f in evals/run_*_evals.py; do python "$f" --threshold 0.9 || exit 1; done
+      - uses: actions/upload-artifact@v4
+        with: { name: eval-results, path: "evals/*results.json" }
+
+  apply:
+    needs: evals
+    runs-on: ubuntu-latest
+    environment: production          # add a required reviewer to this environment: that is the human
+    permissions: { id-token: write, contents: read }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}   # an OIDC role; no long-lived keys anywhere
+          aws-region: ap-south-1
+      - uses: hashicorp/setup-terraform@v3
+      - run: make layer && make bundle
+      - run: cd deploy && terraform init -input=false && terraform apply -auto-approve -input=false -var fake=${{ inputs.fake }}
+        env:
+          TF_VAR_alert_email: ${{ vars.ALERT_EMAIL }}   # a repo variable; without it the apply would drop the e-mail subscription
+# Needs remote state first (deploy/backend.tf.example): a runner keeps no state between runs.

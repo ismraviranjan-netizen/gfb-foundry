@@ -1,0 +1,16 @@
+name: evals-gate
+on: [push, pull_request]
+jobs:
+  test-and-evals:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.13" }
+      - run: pip install pyyaml pytest numpy pandas python-hcl2   # labs and the Terraform checks run too, not skip
+      - run: python -m pytest -q -rs
+        env: { FOUNDRY_LABS_REQUIRED: "1" }
+      - run: python evals/run_evals.py --threshold 0.9      # no eval, no deploy
+      - run: for f in evals/run_*_evals.py; do python "$f" --threshold 0.9 || exit 1; done   # every agent's set
+      - uses: actions/upload-artifact@v4
+        with: { name: eval-results, path: "evals/*results.json" }
