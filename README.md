@@ -6,7 +6,7 @@
 
 Three specialist AI agents (root cause, inventory rebalancing, demand sensing) work under one
 control tower agent. The tower turns a supply chain breach into a single plan, with a named human
-approver for every action. It runs on Claude through Amazon Bedrock and deploys to AWS with Terraform.
+approver for every action. It runs on Claude through Amazon Bedrock.
 
 Everything runs on a synthetic company, Gokul Foods & Beverages (GFB): six sites, ten SKUs, twelve
 lanes. No real client and no real data.
@@ -22,7 +22,7 @@ lanes. No real client and no real data.
 | Tests | 354 automated tests |
 | Evals | 8 labelled eval sets, each gated at 90% in CI: no eval, no deploy |
 | Guardrails | Kill switch, propose-only mode, per-tool disable, human approval before any action, spend budget per run |
-| Deploy | AWS Lambda, API Gateway, DynamoDB and S3, defined in Terraform; deploy runs only after a human approves |
+| Deploy | Optional AWS deployment (see Deploy to AWS below); runs only after a human approves |
 
 ## How it works
 
@@ -128,7 +128,7 @@ approves the `production` environment. It uses an OIDC role, so there are no lon
 foundry/            core loop, levers, approval, Bedrock client, agents, tower, console
 evals/              labelled eval sets and their runners (each one a CI gate)
 tests/              the test suite
-deploy/             Lambda handler and Terraform (API, DynamoDB, S3, alarms)
+deploy/             AWS deployment files
 ops/                cost and latency ledger
 profiles/ networks/ company profiles and network definitions
 kit/                onboarding kit for a new company
